@@ -35,9 +35,9 @@ npm install var-guard
 
 ## Usage
 
-### 1. Import var-guard
+### 1. Import Var-Guard
 
-var-guard provides services for validating, synchronizing, and auditing environment variables.
+Var-Guard provides services for validating, synchronizing, and auditing environment variables.
 
 ```javascript
 import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesInGitHub } from 'var-guard';
@@ -168,13 +168,43 @@ Example `schema.json`:
 
 ### 2. Run the Library
 
-Create a Node.js file (e.g., `index.js`) and use var-guard.
+Create a Node.js file (e.g., `index.js`) and use Var-Guard.
 
 ```bash
 node index.js
 ```
 
-### 3. Test the Endpoints (if using the example server)
+### 3. Run in CI/CD Pipeline
+
+For **GitHub Actions**, you can automatically access the GitHub token and repository name directly from the GitHub environment. Here’s how to set up the CI/CD pipeline:
+
+```yaml
+jobs:
+  validate-env:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run EnvGuard Validation
+        run: |
+          npm start -- --schema=true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token is automatically available
+          GITHUB_REPO: ${{ github.repository }}       # Repository name is automatically available
+```
+
+### 4. Test the Endpoints (if using the example server)
 
 Start the server:
 
@@ -207,4 +237,3 @@ Contributions are welcome! Follow these steps to contribute:
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
