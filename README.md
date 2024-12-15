@@ -28,19 +28,19 @@ Var-Guard is a Node.js library designed to streamline and secure the management 
 ## Installation
 
 ```bash
-npm install envguard
+npm install var-guard
 ```
 
 ---
 
 ## Usage
 
-### 1. Import EnvGuard
+### 1. Import var-guard
 
-EnvGuard provides services for validating, synchronizing, and auditing environment variables.
+var-guard provides services for validating, synchronizing, and auditing environment variables.
 
 ```javascript
-import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesInGitHub } from 'envguard';
+import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesInGitHub } from 'var-guard';
 ```
 
 ### 2. Example Usage
@@ -48,7 +48,7 @@ import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesI
 #### Validation Example
 
 ```javascript
-import { validateEnv } from 'envguard';
+import { validateEnv } from 'var-guard';
 
 const envVars = process.env;
 const schemaPath = './schema.json';
@@ -64,7 +64,7 @@ try {
 #### Synchronization Example
 
 ```javascript
-import { loadEnv, fetchGitHubSecrets, compareSecrets } from 'envguard';
+import { loadEnv, fetchGitHubSecrets, compareSecrets } from 'var-guard';
 
 const token = 'your_github_token';
 const repo = 'your_username/your_repo';
@@ -83,7 +83,7 @@ if (missingSecrets.length) {
 #### Auditing Example
 
 ```javascript
-import { trackChangesInGitHub } from 'envguard';
+import { trackChangesInGitHub } from 'var-guard';
 
 const token = 'your_github_token';
 const repo = 'your_username/your_repo';
@@ -168,7 +168,7 @@ Example `schema.json`:
 
 ### 2. Run the Library
 
-Create a Node.js file (e.g., `index.js`) and use EnvGuard.
+Create a Node.js file (e.g., `index.js`) and use var-guard.
 
 ```bash
 node index.js
