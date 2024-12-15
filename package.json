@@ -1,9 +1,14 @@
 {
-  "name": "env-guard",
+  "name": "var-guard",
   "version": "1.0.0",
-  "description": "EnvGuard ensures environment variables are validated, synchronized, audited, and secure.",
+  "description": "Ensures environment variables are validated, synchronized, audited, and secure.",
   "type": "module",
   "main": "src/index.js",
+  "author": "Yessin Rebhi",
+  "license": "MIT",
+  "bin": {
+    "env-guard": "src/cli.js"
+  },
   "scripts": {
     "start": "node --watch src/app.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
@@ -20,5 +25,6 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "supertest": "^6.3.4"
-  }
+  },
+  "keywords": [ "env", "environment", "variables", "validation", "security", "nodejs", "audit", "github" ]
 }
