@@ -200,8 +200,8 @@ jobs:
         run: |
           npm start -- --schema=true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token is automatically available
-          GITHUB_REPO: ${{ github.repository }}       # Repository name is automatically available
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
 ```
 
 ### 4. Test the Endpoints (if using the example server)
