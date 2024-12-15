@@ -14,7 +14,7 @@ const getGitHubCommits = async (token, repo) => {
 };
 
 const getCommitDetails = async (token, repo, sha) => {
-  const url = `https://api.github.com/repos/${repo}/commits/edc73461805e5e1f3fc548f977ee8a67d895c0d6`;
+  const url = `https://api.github.com/repos/${repo}/commits/${sha}`;
   try {
     const response = await axios.get(url, {
       headers: { Authorization: `Bearer ${token}` },
