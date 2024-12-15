@@ -1,0 +1,24 @@
+{
+  "name": "env-guard",
+  "version": "1.0.0",
+  "description": "EnvGuard ensures environment variables are validated, synchronized, audited, and secure.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node --watch src/app.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "axios": "^1.7.9",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  }
+}
