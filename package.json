@@ -10,7 +10,7 @@
     "env-guard": "src/cli.js"
   },
   "scripts": {
-    "start": "node --watch src/app.js",
+    "start": "node bin/cli.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {
@@ -20,11 +20,21 @@
     "commander": "^12.1.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "minimist": "^1.2.8",
     "winston": "^3.17.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "supertest": "^6.3.4"
   },
-  "keywords": [ "env", "environment", "variables", "validation", "security", "nodejs", "audit", "github" ]
+  "keywords": [
+    "env",
+    "environment",
+    "variables",
+    "validation",
+    "security",
+    "nodejs",
+    "audit",
+    "github"
+  ]
 }
