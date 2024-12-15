@@ -1,6 +1,6 @@
-# EnvGuard
+# Var-Guard
 
-EnvGuard is a Node.js library designed to streamline and secure the management of environment variables in modern software development. It ensures that all your environment variables are:
+Var-Guard is a Node.js library designed to streamline and secure the management of environment variables in modern software development. It ensures that all your environment variables are:
 
 - **Validated**: Based on schemas with advanced rules.
 - **Synchronized**: Between local environments and deployment secrets (e.g., GitHub, cloud providers).
