@@ -3,10 +3,10 @@ import { parseEnvExample } from './exampleParser.js';
 
 export const loadEnv = (envPath, examplePath) => {
   const requiredVars = parseEnvExample(examplePath);
-  if (!envPath) return requiredVars;
-
+  
   dotenv.config({ path: envPath });
-
+  if (!process.env.NODE_ENV) return requiredVars;
+  
   const filteredEnv = {};
   const missingVars = [];
 
