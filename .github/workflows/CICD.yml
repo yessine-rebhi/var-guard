@@ -33,7 +33,7 @@ jobs:
           echo "NODE_ENV=${{ secrets.NODE_ENV }}"
       - name: Run EnvGuard Validation
         run: |
-          npm start -- --schema=true
+          npm start -- --schema=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}

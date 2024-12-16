@@ -10,9 +10,10 @@ const runCLI = () => {
   // Extract arguments or fallbacks to environment variables
   const token = args['token'] || process.env.GITHUB_TOKEN;
   const repo = args['repo'] || process.env.GITHUB_REPO;
+  const useSchemaValidation = args['schema'] === 'true';
 
   // Call the validateEnv function with parsed arguments
-  validateEnv({ token, repo });
+  validateEnv({ token, repo, useSchemaValidation });
 };
 
 // Expose the runCLI function for use in CLI environments
