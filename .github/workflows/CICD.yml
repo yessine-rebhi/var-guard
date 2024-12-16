@@ -11,6 +11,9 @@ on:
 jobs:
   validate-env:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
 
     steps:
       - name: Checkout repository
