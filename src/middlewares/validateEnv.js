@@ -13,7 +13,6 @@ const validateEnv = async ({ token, repo, useSchemaValidation }) => {
   try {
     // Load environment variables and .env.example file
     const requiredVars = loadEnv('.env', '.env.example');
-    console.log(chalk.green('✔️  Loaded environment variables from .env and .env.example.'));
 
     // If schema validation is enabled, validate environment variables against the schema
     if (useSchemaValidation) {
