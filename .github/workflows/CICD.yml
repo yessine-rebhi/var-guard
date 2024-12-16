@@ -27,6 +27,6 @@ jobs:
         
       - name: Run EnvGuard Validation
         run: |
-          npm start -- --tokens=${{ secrets.PAT_TOKEN }} --repos=${{ github.repository }} --schema=false
+          npm start -- --token=${{ secrets.PAT_TOKEN }} --repo=${{ github.repository }} --schema=false
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
