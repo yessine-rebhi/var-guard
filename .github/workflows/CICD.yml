@@ -24,7 +24,13 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-
+      - name: Print Environment Variables
+        run: |
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}"
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+          echo "PORT=${{ secrets.PORT }}"
+          echo "API_KEY=${{ secrets.API_KEY }}"
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}"
       - name: Run EnvGuard Validation
         run: |
           npm start -- --schema=true
