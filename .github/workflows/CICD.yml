@@ -24,9 +24,10 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-        
+
       - name: Run EnvGuard Validation
         run: |
-          npm start -- --token=${{ secrets.PAT_TOKEN }} --repo=${{ github.repository }} --schema=false
+          npm start -- --token=${{ secrets.GITHUB_TOKEN }} --repo=${{ github.repository }} --schema=false
         env:
-          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
