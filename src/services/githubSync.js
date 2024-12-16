@@ -9,5 +9,6 @@ export const fetchGitHubSecrets = async (token, repo) => {
 };
 
 export const compareSecrets = (requiredVars, githubSecrets) => {
-  return Object.keys(requiredVars).filter(requiredVar => !githubSecrets.includes(requiredVar));
+  const varsToCheck = Array.isArray(requiredVars) ? requiredVars : Object.keys(requiredVars);
+  return varsToCheck.filter(requiredVar => !githubSecrets.includes(requiredVar));
 };

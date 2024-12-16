@@ -2,9 +2,11 @@ import dotenv from 'dotenv';
 import { parseEnvExample } from './exampleParser.js';
 
 export const loadEnv = (envPath, examplePath) => {
+  const requiredVars = parseEnvExample(examplePath);
+  if (!envPath) return requiredVars;
+
   dotenv.config({ path: envPath });
 
-  const requiredVars = parseEnvExample(examplePath);
   const filteredEnv = {};
   const missingVars = [];
 
