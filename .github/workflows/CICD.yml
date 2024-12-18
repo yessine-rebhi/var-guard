@@ -27,9 +27,3 @@ jobs:
 
       - name: Generate .env.example and Validate Environment Variables
         run: npm start
-
-
-
-
-      env:
-        PORT: ${{ secrets.PORT }}        
