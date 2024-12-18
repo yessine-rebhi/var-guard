@@ -4,7 +4,7 @@ import chalk from 'chalk';
 export const fetchGitHubSecrets = async (token, repo) => {
   if (!token || !repo) {
     const githubSecretsJSON = process.env.GSL_GITHUB_SECRETS;
-    console.log('githubSecretsJSON', githubSecretsJSON);
+    console.log('githubSecretsJSON', typeof githubSecretsJSON );
     if (!githubSecretsJSON) {
       console.log(chalk.red('❌ Github Secrets empty.'));
       return [];
