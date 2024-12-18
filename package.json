@@ -9,6 +9,10 @@
   "bin": {
     "env-guard": "./bin/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yessine-rebhi/var-guard"
+  },
   "scripts": {
     "var-guard": "node bin/cli.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
