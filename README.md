@@ -1,11 +1,12 @@
 # Var-Guard
 
-Var-Guard is a Node.js library designed to streamline and secure the management of environment variables in modern software development. It ensures that all your environment variables are:
+**Var-Guard** is a Node.js library designed to streamline and secure the management of environment variables in modern software development. It ensures that all your environment variables are:
 
 - **Validated**: Based on schemas with advanced rules.
 - **Synchronized**: Between local environments and deployment secrets (e.g., GitHub, cloud providers).
 - **Audited**: Tracks changes for traceability and collaboration.
 - **Secure**: Warns against insecure practices and integrates seamlessly with secret managers.
+- **Generated**: Automatically generates the `.env.example` file from your codebase.
 
 ---
 
@@ -14,14 +15,20 @@ Var-Guard is a Node.js library designed to streamline and secure the management 
 1. **Validation**
    - Validate environment variables using a schema (`schema.json`).
    - Support for common formats like `email`, `uri`, and `uuid`.
+   
 2. **Synchronization**
    - Compare local `.env` variables with deployment secrets (e.g., GitHub Secrets).
+
 3. **Auditing**
    - Tracks and logs changes in environment variables.
    - Audit GitHub commits to detect changes in `.env` and `schema.json` files.
+
 4. **Security**
    - Identifies missing or unused variables.
    - Warns against insecure configurations.
+
+5. **Generate `.env.example`**
+   - Automatically generates a `.env.example` file by scanning your codebase for `process.env` variables.
 
 ---
 
@@ -37,10 +44,10 @@ npm install var-guard
 
 ### 1. Import Var-Guard
 
-Var-Guard provides services for validating, synchronizing, and auditing environment variables.
+Var-Guard provides services for validating, synchronizing, auditing, and generating `.env.example` files.
 
 ```javascript
-import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesInGitHub } from 'var-guard';
+import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesInGitHub, generateEnvExample } from 'var-guard';
 ```
 
 ### 2. Example Usage
@@ -96,9 +103,19 @@ try {
 }
 ```
 
+#### Generate `.env.example` Example
+
+```javascript
+import { generateEnvExample } from 'var-guard';
+
+generateEnvExample();
+```
+
+This command will scan your codebase for any references to `process.env.VARIABLE_NAME`, then generate a `.env.example` file in the root of your project. This file will include all the required environment variables, allowing you to easily share it with your team or for use in CI/CD pipelines.
+
 ---
 
-## API
+## Services
 
 ### 1. `loadEnv(envPath, examplePath)`
 
@@ -134,6 +151,10 @@ Tracks changes in `.env` and `schema.json` files in GitHub commits.
 
 - **token**: GitHub personal access token.
 - **repo**: Repository name in `owner/repo` format.
+
+### 6. `generateEnvExample()`
+
+Generates a `.env.example` file by scanning your codebase for references to `process.env`. The file will include all environment variables that should be configured for the project.
 
 ---
 
@@ -179,6 +200,16 @@ node index.js
 For **GitHub Actions**, you can automatically access the GitHub token and repository name directly from the GitHub environment. Here’s how to set up the CI/CD pipeline:
 
 ```yaml
+name: EnvGuard CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
 jobs:
   validate-env:
     runs-on: ubuntu-latest
@@ -190,18 +221,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Install dependencies
         run: |
           npm install
 
-      - name: Run EnvGuard Validation
-        run: |
-          npm start -- --schema=true
+      - name: Generate .env.example and Validate Environment Variables
+        run: npm run var-guard
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO: ${{ github.repository }}
+          SECRETS_GITHUB_LIST: ${{ toJson(secrets) }}
 ```
 
 ### 4. Test the Endpoints (if using the example server)
@@ -235,5 +264,3 @@ Contributions are welcome! Follow these steps to contribute:
 ---
 
 ## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

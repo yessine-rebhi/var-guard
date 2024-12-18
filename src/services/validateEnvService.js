@@ -9,7 +9,6 @@ export const validateEnvService = (envVars, schemaPath) => {
 
   const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));
   const validate = ajv.compile(schema);
-  console.log('env',envVars);
   const valid = validate(envVars);
   if (!valid) {
     const errors = validate.errors.map(err => `${err.instancePath}: ${err.message}`).join('; ');

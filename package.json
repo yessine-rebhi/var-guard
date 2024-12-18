@@ -7,10 +7,10 @@
   "author": "Yessin Rebhi",
   "license": "MIT",
   "bin": {
-    "env-guard": "src/cli.js"
+    "env-guard": "./bin/cli.js"
   },
   "scripts": {
-    "start": "node bin/cli.js",
+    "var-guard": "node bin/cli.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {

@@ -3,12 +3,12 @@ import chalk from 'chalk';
 
 export const fetchGitHubSecrets = async (token, repo) => {
   if (!token || !repo) {
-    const allMySecretsJson = process.env.ALLMYSECRETS;
+    const githubSecretsJSON = process.env.SECRETS_GITHUB_LIST;
     if (!allMySecretsJson) {
       console.log(chalk.red('❌ Github Secrets empty.'));
       return [];
     }
-    return Object.keys(allMySecretsJson);
+    return Object.keys(githubSecretsJSON);
   };
   const url = `https://api.github.com/repos/${repo}/actions/secrets`;
   const response = await axios.get(url, {
