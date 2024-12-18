@@ -25,9 +25,7 @@ jobs:
         run: |
           npm install
 
-      - name: Run EnvGuard Validation
-        run: |
-          npm start -- --token=${{ secrets.ACT_GH }} --repo=${{ github.repository }} --schema=false
+      - name: Generate .env.example and Validate Environment Variables
+        run: npm run var-guard
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO: ${{ github.repository }}
+          GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
