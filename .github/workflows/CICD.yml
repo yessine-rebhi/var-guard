@@ -24,14 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-
-      - name: Set github secrets
-        run: |
-          echo "$GSL_GITHUB_SECRETS"
-        shell: bash
-        env:
-          GSL_GITHUB_SECRETS: ${{ toJSON(secrets) }}
-
+          
       - name: Generate .env.example and Validate Environment Variables
         run: npm run var-guard
         env:
