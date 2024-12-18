@@ -230,7 +230,7 @@ jobs:
       - name: Generate .env.example and Validate Environment Variables
         run: npm run var-guard
         env:
-          SECRETS_GITHUB_LIST: ${{ toJson(secrets) }}
+          GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
 
 ### 4. Test the Endpoints (if using the example server)
