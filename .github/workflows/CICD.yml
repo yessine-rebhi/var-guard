@@ -34,6 +34,3 @@ jobs:
 
       - name: Generate .env.example and Validate Environment Variables
         run: npm run var-guard
-        env:
-          GSL_GITHUB_SECRETS: ${{ toJSON(secrets) }}
-          
