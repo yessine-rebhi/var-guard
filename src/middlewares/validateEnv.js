@@ -3,44 +3,41 @@ import { validateEnvService } from '../services/validateEnvService.js';
 import { fetchGitHubSecrets, compareSecrets } from '../services/githubSync.js';
 import chalk from 'chalk';
 
-
-const validateEnv = async ({ token, repo, useSchemaValidation }) => {
-  if (!token || !repo) {
+const validateEnv = async ({ token, repo, schemaValidation }) => {
+  const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
+  if ((!token || !repo) && !isCI) {
     console.error(chalk.red('❌ Error: Both GitHub token and repository are required.'));
     process.exit(1);
   }
 
   try {
-    // Load environment variables and .env.example file
-    const requiredVars = loadEnv('.env', '.env.example');
+    console.log(chalk.blue('🔍 Loading environment variables...'));
+    const requiredVars = loadEnv('.env', '.env.example', schemaValidation);
 
-    // If schema validation is enabled, validate environment variables against the schema
-    if (useSchemaValidation) {
+    if (schemaValidation) {
       console.log(chalk.green('✔️  Schema validation enabled. Checking against schema.json...'));
       validateEnvService(requiredVars, 'schema.json');
       console.log(chalk.green('✔️  Environment variables are valid according to the schema.'));
     } else {
-      console.log(chalk.yellow('⚠️  Schema validation skipped.'));
+      console.log(chalk.yellow('⚠️  Schema validation skipped (schema tag set to false).'));
     }
 
-    // Fetch GitHub secrets and compare them with local variables
-    console.log(chalk.green('✔️  Fetching GitHub secrets...'));
+    console.log(chalk.blue('🔍 Fetching GitHub secrets...'));
     const githubSecrets = await fetchGitHubSecrets(token, repo);
     const missingSecrets = compareSecrets(requiredVars, githubSecrets);
 
-    // Display results based on missing secrets
     if (missingSecrets.length > 0) {
-      console.log(chalk.red('❌  Missing Secrets:'));
-      missingSecrets.forEach(secret => {
-        console.log(chalk.red(`  - ${secret} is missing in GitHub secrets.`));
+      console.log(chalk.red.bold('❌ Missing Secrets in GitHub:'));
+      missingSecrets.forEach((secret) => {
+        console.log(chalk.red(`- ${secret}`));
       });
     } else {
-      console.log(chalk.green('✔️  No missing secrets found in GitHub.'));
+      console.log(chalk.green('✔️  All GitHub secrets are correctly set.'));
     }
 
     console.log(chalk.green('✔️  Validation completed successfully.'));
   } catch (error) {
-    console.error(chalk.red(`❌  Validation failed: ${error.message}`));
+    console.error(chalk.red(`❌ Validation failed: ${error.message}`));
     process.exit(1);
   }
 };

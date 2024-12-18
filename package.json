@@ -1,6 +1,6 @@
 {
   "name": "var-guard",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Ensures environment variables are validated, synchronized, audited, and secure.",
   "type": "module",
   "main": "src/index.js",
@@ -22,6 +22,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "minimist": "^1.2.8",
+    "walkdir": "^0.4.1",
     "winston": "^3.17.0"
   },
   "devDependencies": {

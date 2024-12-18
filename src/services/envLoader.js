@@ -1,31 +1,49 @@
 import dotenv from 'dotenv';
 import { parseEnvExample } from './exampleParser.js';
 import chalk from 'chalk';
+import fs from 'fs';
 
-export const loadEnv = (envPath, examplePath) => {
+export const loadEnv = (envPath, examplePath, schemaValidation = false) => {
   const requiredVars = parseEnvExample(examplePath);
 
-  dotenv.config({ path: envPath });
-  if (!process.env.NODE_ENV) {
-    console.log(chalk.green('✔️  Loaded environment variables from .env.example.'));
+  const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
+
+  // If .env does not exist
+  if (!fs.existsSync(envPath)) {
+    if (isCI) {
+      console.log(chalk.yellow('⚠️  Running in CI/CD environment.'));
+      console.log(chalk.green('✔️  Assuming environment variables are injected at runtime.'));
+    } else {
+      console.log(chalk.yellow('⚠️  No ".env" file found! Using ".env.example" as the reference.'));
+      console.log(
+        chalk.blue('The following environment variables are required:\n') +
+        requiredVars.map((varName) => `- ${varName}`).join('\n')
+      );
+      console.log(chalk.red('⚠️  Please create a ".env" file and define these variables.'));
+    }
     return requiredVars;
   }
 
-  const filteredEnv = {};
-  const missingVars = [];
+  dotenv.config({ path: envPath });
+  console.log(chalk.green('✔️  Successfully loaded ".env" file.'));
 
-  requiredVars.forEach(varName => {
-    if (process.env[varName]) {
-      filteredEnv[varName] = process.env[varName];
-    } else {
-      missingVars.push(varName);
-    }
-  });
+  const missingVars = requiredVars.filter(
+    (varName) => !process.env[varName] || process.env[varName].trim() === ''
+  );
+
   if (missingVars.length > 0) {
-    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+    console.log(chalk.red.bold('❌ Missing or Empty Environment Variables:'));
+    console.log(missingVars.map((varName) => `- ${varName}`).join('\n'));
+    console.log(chalk.yellow('⚠️  Please update your ".env" file with these variables.'));
   }
 
-  console.log(chalk.green('✔️  Loaded environment variables from .env and .env.example.'));
+  if (schemaValidation) {
+    const envObject = {};
+    requiredVars.forEach((varName) => {
+      envObject[varName] = process.env[varName] || '';
+    });
+    return envObject;
+  }
 
-  return filteredEnv;
+  return requiredVars;
 };
