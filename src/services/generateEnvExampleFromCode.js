@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 
-const excludedVars = ['CI', 'GITHUB_ACTIONS'];
+const excludedVars = ['CI', 'GITHUB_ACTIONS', 'GSL_GITHUB_SECRETS'];
 
 const findProcessEnvVariables = (dir, variables) => {
   try {

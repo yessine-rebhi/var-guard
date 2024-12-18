@@ -57,11 +57,11 @@ import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesI
 ```javascript
 import { validateEnv } from 'var-guard';
 
-const envVars = process.env;
+const requiredVars = ['envVar1','envVar2'];
 const schemaPath = './schema.json';
 
 try {
-  validateEnv(envVars, schemaPath);
+  validateEnvService(requiredVars, schemaPath);
   console.log('Environment variables are valid!');
 } catch (error) {
   console.error(`Validation failed: ${error.message}`);
@@ -192,7 +192,7 @@ Example `schema.json`:
 Create a Node.js file (e.g., `index.js`) and use Var-Guard.
 
 ```bash
-node index.js
+npm run var-guard
 ```
 
 ### 3. Run in CI/CD Pipeline
@@ -233,24 +233,6 @@ jobs:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
 
-### 4. Test the Endpoints (if using the example server)
-
-Start the server:
-
-```bash
-node src/app.js
-```
-
-Test the validation endpoint:
-
-```bash
-curl -X POST http://localhost:3000/api/validate \
-  -H "Content-Type: application/json" \
-  -d '{"token": "your_github_token", "repo": "your_username/your_repo"}'
-```
-
----
-
 ## Contributing
 
 Contributions are welcome! Follow these steps to contribute:
@@ -264,3 +246,5 @@ Contributions are welcome! Follow these steps to contribute:
 ---
 
 ## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
