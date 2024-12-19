@@ -250,7 +250,7 @@ jobs:
           npm install
 
       - name: Validate Environment Variables
-        run: npm run var-guard
+        run: npx var-guard
         env:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
