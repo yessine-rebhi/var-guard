@@ -1,6 +1,6 @@
 {
   "name": "var-guard",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Ensures environment variables are validated, synchronized, audited, and secure.",
   "type": "module",
   "main": "src/index.js",
