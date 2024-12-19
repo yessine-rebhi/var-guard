@@ -15,7 +15,6 @@
   },
   "scripts": {
     "var-guard": "node bin/varguard.js",
-    "postinstall": "node scripts/postinstall.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {
