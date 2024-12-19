@@ -1,0 +1,22 @@
+# Ignore development and CI/CD files
+.github/
+.git/
+.vscode/
+node_modules/
+
+# Ignore test-related files
+tests/
+__tests__/
+coverage/
+
+# Ignore configuration files
+*.log
+.env
+.env.local
+schema.json
+.env.example
+
+# Ignore build and temporary files
+dist/
+build/
+temp/

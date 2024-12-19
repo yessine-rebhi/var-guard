@@ -1,13 +1,18 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import fs from 'fs';
+import path from 'path';
 
 export const validateEnvService = (envVars, schemaPath) => {
   const ajv = new Ajv({ allErrors: true, strict: false });
 
   addFormats(ajv);
+  const resolvedPath = path.resolve(process.cwd(), schemaPath);
+  if (!fs.existsSync(resolvedPath)) {
+    throw new Error(`Schema file not found at: ${resolvedPath}`);
+  }
 
-  const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));
+  const schema = JSON.parse(fs.readFileSync(resolvedPath, 'utf-8'));
   const validate = ajv.compile(schema);
   const valid = validate(envVars);
   if (!valid) {

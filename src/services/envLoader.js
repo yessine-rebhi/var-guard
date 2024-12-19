@@ -3,10 +3,11 @@ import { parseEnvExample } from './exampleParser.js';
 import chalk from 'chalk';
 import fs from 'fs';
 
-export const loadEnv = (envPath, examplePath, schemaValidation = false) => {
+export const loadEnv = (envPath, examplePath, schemaPath) => {
   const requiredVars = parseEnvExample(examplePath);
 
   const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
+  const a = process.env.TEST
 
   // If .env does not exist
   if (!fs.existsSync(envPath)) {
@@ -37,7 +38,7 @@ export const loadEnv = (envPath, examplePath, schemaValidation = false) => {
     console.log(chalk.yellow('⚠️  Please update your ".env" file with these variables.'));
   }
 
-  if (schemaValidation) {
+  if (schemaPath) {
     const envObject = {};
     requiredVars.forEach((varName) => {
       envObject[varName] = process.env[varName] || '';

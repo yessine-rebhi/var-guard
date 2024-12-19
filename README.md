@@ -13,21 +13,26 @@
 ## Features
 
 1. **Validation**
+
    - Validate environment variables using a schema (`schema.json`).
    - Support for common formats like `email`, `uri`, and `uuid`.
-   
+
 2. **Synchronization**
+
    - Compare local `.env` variables with deployment secrets (e.g., GitHub Secrets).
 
 3. **Auditing**
+
    - Tracks and logs changes in environment variables.
    - Audit GitHub commits to detect changes in `.env` and `schema.json` files.
 
 4. **Security**
+
    - Identifies missing or unused variables.
    - Warns against insecure configurations.
 
-5. **Generate `.env.example`**
+5. **Generate ****`.env.example`**
+
    - Automatically generates a `.env.example` file by scanning your codebase for `process.env` variables.
 
 ---
@@ -40,7 +45,40 @@ npm install var-guard
 
 ---
 
-## Usage
+## CLI Usage
+
+Var-Guard includes a CLI interface for flexible integration into your workflows.
+
+### Commands
+
+#### 1. `npx varguard generate`
+
+Generates a `.env.example` file by scanning your codebase for references to `process.env.VARIABLE_NAME`.
+
+#### 2. `npx varguard validate`
+
+Validates the `.env` file against a `.env.example` and/or `schema.json` file, and compares local variables with GitHub secrets.
+
+Options:
+
+- `--token`: GitHub token
+- `--repo`: GitHub repository in `owner/repo` format
+- `--schemaPath`: Path to schema.json (default: `./schema.json`)
+- `--help`: Show help
+
+Example:
+
+```bash
+npx varguard validate --token your_github_token --repo your_username/your_repo --schemaPath ./path/to/schema.json
+```
+
+#### 3. `npx varguard watch`
+
+Watches for changes in `.env.example` or `schema.json` files and logs updates.
+
+---
+
+## Library Usage
 
 ### 1. Import Var-Guard
 
@@ -57,11 +95,11 @@ import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesI
 ```javascript
 import { validateEnv } from 'var-guard';
 
-const requiredVars = ['envVar1','envVar2'];
+const envVars = process.env;
 const schemaPath = './schema.json';
 
 try {
-  validateEnvService(requiredVars, schemaPath);
+  validateEnv(envVars, schemaPath);
   console.log('Environment variables are valid!');
 } catch (error) {
   console.error(`Validation failed: ${error.message}`);
@@ -165,14 +203,6 @@ Generates a `.env.example` file by scanning your codebase for references to `pro
 1. Create `.env` and `.env.example` files in your project.
 2. (Optional) Create a `schema.json` for advanced validation.
 
-Example `.env.example`:
-
-```env
-DATABASE_URL=
-PORT=3000
-API_KEY=
-```
-
 Example `schema.json`:
 
 ```json
@@ -187,15 +217,7 @@ Example `schema.json`:
 }
 ```
 
-### 2. Run the Library
-
-Create a Node.js file (e.g., `index.js`) and use Var-Guard.
-
-```bash
-npm run var-guard
-```
-
-### 3. Run in CI/CD Pipeline
+### 2. Run in CI/CD Pipeline
 
 For **GitHub Actions**, you can automatically access the GitHub token and repository name directly from the GitHub environment. Here’s how to set up the CI/CD pipeline:
 
@@ -227,23 +249,11 @@ jobs:
         run: |
           npm install
 
-      - name: Generate .env.example and Validate Environment Variables
-        run: npm run var-guard
+      - name: Validate Environment Variables
+        run: npx var-guard generate && npx var-guard validate
         env:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
-
-## Contributing
-
-Contributions are welcome! Follow these steps to contribute:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`.
-3. Commit your changes: `git commit -m "Add feature"`.
-4. Push to the branch: `git push origin feature-name`.
-5. Submit a pull request.
-
----
 
 ## License
 
