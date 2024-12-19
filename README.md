@@ -249,8 +249,10 @@ jobs:
         run: |
           npm install
 
-      - name: Generate Validate Environment Variables
-        run: npx varguard validate --token ${{ secrets.GITHUB_TOKEN }} --repo ${{ github.repository }}
+      - name: Validate Environment Variables
+        run: npm run var-guard
+        env:
+          GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
 
 ## License
