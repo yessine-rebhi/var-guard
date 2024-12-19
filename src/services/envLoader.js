@@ -7,7 +7,7 @@ export const loadEnv = (envPath, examplePath, schemaPath) => {
   const requiredVars = parseEnvExample(examplePath);
 
   const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
-  const a = process.env.test
+  const a = process.env.TEST
 
   // If .env does not exist
   if (!fs.existsSync(envPath)) {
