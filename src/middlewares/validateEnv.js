@@ -3,7 +3,7 @@ import { validateEnvService } from '../services/validateEnvService.js';
 import { fetchGitHubSecrets, compareSecrets } from '../services/githubSync.js';
 import chalk from 'chalk';
 
-const validateEnv = async ({ token, repo, schemaValidation }) => {
+const validateEnv = async ({ token, repo, schemaPath }) => {
   const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
   if ((!token || !repo) && !isCI) {
     console.error(chalk.red('❌ Error: Both GitHub token and repository are required.'));
@@ -12,14 +12,14 @@ const validateEnv = async ({ token, repo, schemaValidation }) => {
 
   try {
     console.log(chalk.blue('🔍 Loading environment variables...'));
-    const requiredVars = loadEnv('.env', '.env.example', schemaValidation);
+    const requiredVars = loadEnv('.env', '.env.example', schemaPath);
 
-    if (schemaValidation) {
+    if (schemaPath) {
       console.log(chalk.green('✔️  Schema validation enabled. Checking against schema.json...'));
-      validateEnvService(requiredVars, 'schema.json');
+      validateEnvService(requiredVars, schemaPath);
       console.log(chalk.green('✔️  Environment variables are valid according to the schema.'));
     } else {
-      console.log(chalk.yellow('⚠️  Schema validation skipped (schema tag set to false).'));
+      console.log(chalk.yellow('⚠️  Schema validation skipped (schemaPath tag not provided).'));
     }
 
     console.log(chalk.blue('🔍 Fetching GitHub secrets...'));

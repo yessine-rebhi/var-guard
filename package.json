@@ -7,14 +7,15 @@
   "author": "Yessin Rebhi",
   "license": "MIT",
   "bin": {
-    "env-guard": "./bin/cli.js"
+    "var-guard": "./bin/varguard.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/yessine-rebhi/var-guard"
   },
   "scripts": {
-    "var-guard": "node bin/cli.js",
+    "var-guard": "node bin/varguard.js",
+    "postinstall": "node scripts/postinstall.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {
@@ -22,10 +23,12 @@
     "ajv-formats": "^3.0.1",
     "axios": "^1.7.9",
     "chalk": "^5.3.0",
+    "chokidar": "^3.5.3",
     "commander": "^12.1.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "minimist": "^1.2.8",
+    "var-guard": "^1.2.1",
     "walkdir": "^0.4.1",
     "winston": "^3.17.0"
   },
