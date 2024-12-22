@@ -22,7 +22,7 @@ export const handleExistingEnvExample = (envExamplePath, variables) => {
 
   if (extraVariables.length > 0) {
     console.warn(chalk.yellow('⚠️  Extra variables in .env.example not found in codebase:'));
-    console.warn(extraVariables.map(([varName, _]) => `   - ${varName}`).join('\n'));
+    console.warn(extraVariables.map((varName) => `   - ${varName}`).join('\n'));
   }
 
   if (missingVariables.length === 0 && extraVariables.length === 0) {
