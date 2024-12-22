@@ -1,0 +1,30 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.test
+.env.production
+
+# Secrets and credentials
+*.pem
+*.key
+*.crt
+*.pfx
+
+# Logs
+logs/
+*.log
+*.csv
+*.pid
+*.seed
+*.pid.lock
+
+# Build and production output
+dist/
+build/
+coverage/

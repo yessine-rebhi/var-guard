@@ -1,0 +1,35 @@
+{
+  "name": "varguard",
+  "version": "0.0.10",
+  "description": "Ensures environment variables are validated, synchronized, audited, and secure.",
+  "type": "module",
+  "main": "src/index.js",
+  "author": "Yessin Rebhi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yessine-rebhi/var-guard"
+  },
+  "scripts": {
+    "varguard": "node src/index.js"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "axios": "^1.7.9",
+    "chalk": "^5.3.0",
+    "chokidar": "^3.5.3",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7"
+  },
+  "keywords": [
+    "env",
+    "environment",
+    "variables",
+    "validation",
+    "security",
+    "nodejs",
+    "audit",
+    "github"
+  ]
+}

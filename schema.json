@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "DATABASE_URL": {
+      "type": "string",
+      "format": "uri"
+    },
+    "PORT": {
+      "type": "string"
+    },
+    "API_KEY": {
+      "type": "string",
+      "minLength": 32
+    },
+    "NODE_ENV": {
+      "type": "string",
+      "enum": [
+        "development",
+        "production",
+        "test"
+      ]
+    }
+  },
+  "required": [
+    "DATABASE_URL",
+    "PORT",
+    "API_KEY",
+    "NODE_ENV"
+  ]
+}
