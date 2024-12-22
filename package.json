@@ -1,6 +1,6 @@
 {
   "name": "varsguard",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Ensures environment variables are validated, synchronized, audited, and secure.",
   "type": "module",
   "main": "src/index.js",
@@ -9,6 +9,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/yessine-rebhi/varsguard"
+  },
+  "bin": {
+    "varsguard": "src/index.js"
   },
   "scripts": {
     "varsguard": "node src/index.js"
