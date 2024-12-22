@@ -21,17 +21,12 @@
 
    - Compare local `.env` variables with deployment secrets (e.g., GitHub Secrets).
 
-3. **Auditing**
-
-   - Tracks and logs changes in environment variables.
-   - Audit GitHub commits to detect changes in `.env` and `schema.json` files.
-
-4. **Security**
+3. **Security**
 
    - Identifies missing or unused variables.
    - Warns against insecure configurations.
 
-5. **Generate ****`.env.example`**
+4. **Generate ****`.env.example`**
 
    - Automatically generates a `.env.example` file by scanning your codebase for `process.env` variables.
 
@@ -40,22 +35,22 @@
 ## Installation
 
 ```bash
-npm install var-guard
+npm install varguard
 ```
 
 ---
 
 ## CLI Usage
 
-Var-Guard includes a CLI interface for flexible integration into your workflows.
+VarGuard includes a CLI interface for flexible integration into your workflows.
 
 ### Commands
 
-#### 1. `npx varguard generate`
+#### 1. `npm run varguard generate`
 
 Generates a `.env.example` file by scanning your codebase for references to `process.env.VARIABLE_NAME`.
 
-#### 2. `npx varguard validate`
+#### 2. `npm varguard validate`
 
 Validates the `.env` file against a `.env.example` and/or `schema.json` file, and compares local variables with GitHub secrets.
 
@@ -72,20 +67,14 @@ Example:
 npx varguard validate --token your_github_token --repo your_username/your_repo --schemaPath ./path/to/schema.json
 ```
 
-#### 3. `npx varguard watch`
-
-Watches for changes in `.env.example` or `schema.json` files and logs updates.
-
----
-
 ## Library Usage
 
-### 1. Import Var-Guard
+### 1. Import VarGuard
 
 Var-Guard provides services for validating, synchronizing, auditing, and generating `.env.example` files.
 
 ```javascript
-import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesInGitHub, generateEnvExample } from 'var-guard';
+import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, generateEnvExample } from 'varguard';
 ```
 
 ### 2. Example Usage
@@ -93,7 +82,7 @@ import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, trackChangesI
 #### Validation Example
 
 ```javascript
-import { validateEnv } from 'var-guard';
+import { validateEnv } from 'varguard';
 
 const envVars = process.env;
 const schemaPath = './schema.json';
@@ -109,7 +98,7 @@ try {
 #### Synchronization Example
 
 ```javascript
-import { loadEnv, fetchGitHubSecrets, compareSecrets } from 'var-guard';
+import { loadEnv, fetchGitHubSecrets, compareSecrets } from 'varguard';
 
 const token = 'your_github_token';
 const repo = 'your_username/your_repo';
@@ -122,22 +111,6 @@ if (missingSecrets.length) {
   console.log('Missing secrets in GitHub:', missingSecrets);
 } else {
   console.log('Local and GitHub secrets are synchronized!');
-}
-```
-
-#### Auditing Example
-
-```javascript
-import { trackChangesInGitHub } from 'var-guard';
-
-const token = 'your_github_token';
-const repo = 'your_username/your_repo';
-
-try {
-  await trackChangesInGitHub(token, repo);
-  console.log('Audit completed successfully!');
-} catch (error) {
-  console.error(`Audit failed: ${error.message}`);
 }
 ```
 
@@ -183,14 +156,7 @@ Compares local variables with GitHub secrets.
 - **localVars**: Local environment variables object.
 - **githubSecrets**: Secrets fetched from GitHub.
 
-### 5. `trackChangesInGitHub(token, repo)`
-
-Tracks changes in `.env` and `schema.json` files in GitHub commits.
-
-- **token**: GitHub personal access token.
-- **repo**: Repository name in `owner/repo` format.
-
-### 6. `generateEnvExample()`
+### 5. `generateEnvExample()`
 
 Generates a `.env.example` file by scanning your codebase for references to `process.env`. The file will include all environment variables that should be configured for the project.
 
@@ -250,7 +216,7 @@ jobs:
           npm install
 
       - name: Validate Environment Variables
-        run: npx var-guard generate && npx var-guard validate
+        run: npm run varguard validate
         env:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
