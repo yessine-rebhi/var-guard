@@ -20,3 +20,5 @@ schema.json
 dist/
 build/
 temp/
+
+CONTRIBUTING.md
