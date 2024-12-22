@@ -20,8 +20,8 @@ export const generateEnvExample = () => {
   }
 
   if (variables.size === 0) {
-    console.error(chalk.red('❌ No environment variables detected in the codebase!'));
-    process.exit(1);
+    console.error(chalk.yellow('⚠️  No environment variables detected in the codebase!'));
+    process.exit(0);
   }
 
   if (fs.existsSync(envExamplePath)) {
