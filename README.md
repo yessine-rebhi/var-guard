@@ -1,6 +1,6 @@
-# Var-Guard
+# VarsGuard
 
-**Var-Guard** is a Node.js library designed to streamline and secure the management of environment variables in modern software development. It ensures that all your environment variables are:
+**VarsGuard** is a Node.js library designed to streamline and secure the management of environment variables in modern software development. It ensures that all your environment variables are:
 
 - **Validated**: Based on schemas with advanced rules.
 - **Synchronized**: Between local environments and deployment secrets (e.g., GitHub, cloud providers).
@@ -71,7 +71,7 @@ npx varsguard validate --token your_github_token --repo your_username/your_repo 
 
 ### 1. Import VarsGuard
 
-Var-Guard provides services for validating, synchronizing, auditing, and generating `.env.example` files.
+VarsGuard provides services for validating, synchronizing, auditing, and generating `.env.example` files.
 
 ```javascript
 import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, generateEnvExample } from 'varsguard';
@@ -117,7 +117,7 @@ if (missingSecrets.length) {
 #### Generate `.env.example` Example
 
 ```javascript
-import { generateEnvExample } from 'var-guard';
+import { generateEnvExample } from 'varsguard';
 
 generateEnvExample();
 ```
