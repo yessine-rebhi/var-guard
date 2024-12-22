@@ -1,5 +1,5 @@
 {
-  "name": "varguard",
+  "name": "varsguard",
   "version": "0.0.10",
   "description": "Ensures environment variables are validated, synchronized, audited, and secure.",
   "type": "module",
@@ -11,7 +11,7 @@
     "url": "https://github.com/yessine-rebhi/var-guard"
   },
   "scripts": {
-    "varguard": "node src/index.js"
+    "varsguard": "node src/index.js"
   },
   "dependencies": {
     "ajv": "^8.17.1",

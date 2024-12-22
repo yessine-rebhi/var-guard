@@ -1,4 +1,4 @@
-name: Varguard CI/CD Pipeline
+name: Varsguard CI/CD Pipeline
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
           npm install
           
       - name: Validate Environment Variables
-        run: npm run varguard validate
+        run: npm run varsguard validate
         env:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
           

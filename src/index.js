@@ -7,7 +7,7 @@ const program = new Command();
 
 program
   .version('0.0.10')
-  .description('VarGuard: Secure and streamline environment variable management.');
+  .description('VarsGuard: Secure and streamline environment variable management.');
 
 program
   .command('generate')

@@ -1,6 +1,6 @@
-# Contributing to varguard
+# Contributing to varsguard
 
-Thank you for considering contributing to varguard! Your help is greatly appreciated. By participating in this project, you are helping to improve it for everyone.
+Thank you for considering contributing to varsguard! Your help is greatly appreciated. By participating in this project, you are helping to improve it for everyone.
 
 ## How to Contribute
 
@@ -16,7 +16,7 @@ To get started with local development, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yessine-rebhi/varguard.git
+   git clone https://github.com/yessine-rebhi/varsguard.git
    ```
 2. Navigate into the project directory:
    ```bash

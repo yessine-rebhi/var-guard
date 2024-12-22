@@ -35,22 +35,22 @@
 ## Installation
 
 ```bash
-npm install varguard
+npm install varsguard
 ```
 
 ---
 
 ## CLI Usage
 
-VarGuard includes a CLI interface for flexible integration into your workflows.
+VarsGuard includes a CLI interface for flexible integration into your workflows.
 
 ### Commands
 
-#### 1. `npm run varguard generate`
+#### 1. `npm run varsguard generate`
 
 Generates a `.env.example` file by scanning your codebase for references to `process.env.VARIABLE_NAME`.
 
-#### 2. `npm varguard validate`
+#### 2. `npm varsguard validate`
 
 Validates the `.env` file against a `.env.example` and/or `schema.json` file, and compares local variables with GitHub secrets.
 
@@ -64,17 +64,17 @@ Options:
 Example:
 
 ```bash
-npx varguard validate --token your_github_token --repo your_username/your_repo --schemaPath ./path/to/schema.json
+npx varsguard validate --token your_github_token --repo your_username/your_repo --schemaPath ./path/to/schema.json
 ```
 
 ## Library Usage
 
-### 1. Import VarGuard
+### 1. Import VarsGuard
 
 Var-Guard provides services for validating, synchronizing, auditing, and generating `.env.example` files.
 
 ```javascript
-import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, generateEnvExample } from 'varguard';
+import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, generateEnvExample } from 'varsguard';
 ```
 
 ### 2. Example Usage
@@ -82,7 +82,7 @@ import { loadEnv, validateEnv, fetchGitHubSecrets, compareSecrets, generateEnvEx
 #### Validation Example
 
 ```javascript
-import { validateEnv } from 'varguard';
+import { validateEnv } from 'varsguard';
 
 const envVars = process.env;
 const schemaPath = './schema.json';
@@ -98,7 +98,7 @@ try {
 #### Synchronization Example
 
 ```javascript
-import { loadEnv, fetchGitHubSecrets, compareSecrets } from 'varguard';
+import { loadEnv, fetchGitHubSecrets, compareSecrets } from 'varsguard';
 
 const token = 'your_github_token';
 const repo = 'your_username/your_repo';
@@ -216,7 +216,7 @@ jobs:
           npm install
 
       - name: Validate Environment Variables
-        run: npm run varguard validate
+        run: npm run varsguard validate
         env:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
