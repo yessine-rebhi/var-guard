@@ -14,7 +14,9 @@ program
 program
   .command('generate')
   .description('Scan the codebase and generate .env.example')
-  .action(runGenerate);
+  .action(async () => {
+    await runGenerate();
+  });
 
 program
   .command('validate')
@@ -22,8 +24,8 @@ program
   .option('-t, --token <token>', 'GitHub token for accessing the repository')
   .option('-r, --repo <repo>', 'GitHub repository in the format owner/repo')
   .option('-s, --schemaPath <schemaPath>', 'Path to the schema file')
-  .action((options) => {
-    runValidate(options);
+  .action(async (options) => {
+    await runValidate(options);
   });
 
 program.on('command:*', () => {

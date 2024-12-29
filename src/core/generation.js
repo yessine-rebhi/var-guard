@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import { findEnvVariablesInCodebase } from "../utils/fileUtils.js";
 import { handleExistingEnvExample, handleNewEnvExample, handleStaticVariablesViolation } from '../utils/envUtils.js';
 
-export const generateEnvExample = () => {
+export const generateEnvExample = async () => {
   const projectRootDir = process.cwd();
   const variables = new Set();
   const staticVariables = new Set();
@@ -12,7 +12,7 @@ export const generateEnvExample = () => {
 
   console.log(chalk.blue('🔍 Scanning codebase for environment variables...'));
 
-  findEnvVariablesInCodebase(projectRootDir, variables, staticVariables);
+  await findEnvVariablesInCodebase(projectRootDir, variables, staticVariables);
 
   if (staticVariables.size > 0) {
     handleStaticVariablesViolation(staticVariables);
@@ -25,7 +25,7 @@ export const generateEnvExample = () => {
   }
 
   if (fs.existsSync(envExamplePath)) {
-    handleExistingEnvExample(envExamplePath, variables);
+    await handleExistingEnvExample(envExamplePath, variables);
   } else {
     handleNewEnvExample(envExamplePath, variables);
   }

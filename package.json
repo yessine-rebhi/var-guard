@@ -17,13 +17,15 @@
     "varsguard": "node src/index.js"
   },
   "dependencies": {
+    "@typescript-eslint/parser": "^8.18.2",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "axios": "^1.7.9",
     "chalk": "^5.4.1",
     "chokidar": "^4.0.3",
     "commander": "^12.1.0",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "estraverse": "^5.3.0"
   },
   "keywords": [
     "env",
@@ -34,5 +36,8 @@
     "nodejs",
     "audit",
     "github"
-  ]
+  ],
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
 }

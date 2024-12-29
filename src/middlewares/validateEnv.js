@@ -3,28 +3,22 @@ import { validateEnvService } from '../services/validateEnvService.js';
 import { fetchGitHubSecrets, compareSecrets } from '../services/githubSync.js';
 import chalk from 'chalk';
 
-const validateEnv = async ({ token, repo, schemaPath }) => {
-  const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
-  if ((!token || !repo) && !isCI) {
-    console.error(chalk.red('❌ Error: Both GitHub token and repository are required.'));
-    process.exit(1);
-  }
-
+export const validateEnv = async ({ token, repo, schemaPath, requiredVarsArray }) => {
   try {
     console.log(chalk.blue('🔍 Loading environment variables...'));
-    const requiredVars = loadEnv('.env', '.env.example', schemaPath);
+    const envVars = await loadEnv('.env', requiredVarsArray, schemaPath);
 
     if (schemaPath) {
       console.log(chalk.green('✔️  Schema validation enabled. Checking against schema.json...'));
-      validateEnvService(requiredVars, schemaPath);
+      validateEnvService(envVars, schemaPath);
       console.log(chalk.green('✔️  Environment variables are valid according to the schema.'));
     } else {
-      console.log(chalk.yellow('⚠️  Schema validation skipped (schemaPath tag not provided).'));
+      console.log(chalk.yellow('⚠️  Schema validation skipped (schemaPath not provided).'));
     }
 
     console.log(chalk.blue('🔍 Fetching GitHub secrets...'));
     const githubSecrets = await fetchGitHubSecrets(token, repo);
-    const missingSecrets = compareSecrets(requiredVars, githubSecrets);
+    const missingSecrets = compareSecrets(requiredVarsArray, githubSecrets);
 
     if (missingSecrets.length > 0) {
       console.log(chalk.red.bold('❌ Missing Secrets in GitHub:'));
@@ -41,5 +35,3 @@ const validateEnv = async ({ token, repo, schemaPath }) => {
     process.exit(1);
   }
 };
-
-export default validateEnv;

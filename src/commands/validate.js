@@ -1,7 +1,7 @@
 import { generateEnvExample } from "../core/generation.js";
 import validateEnv from "../core/validation.js";
 
-export const runValidate = (options) => {
+export const runValidate = async (options) => {
   const { token, repo, schemaPath } = options;
   const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
   if ((!token || !repo) && !isCI) {
@@ -14,6 +14,6 @@ export const runValidate = (options) => {
   }
 
   console.log('🔍 Running "validate" command...');
-  const requiredVarsArray = generateEnvExample();
+  const requiredVarsArray = await generateEnvExample();
   validateEnv({ token, repo, schemaPath, requiredVarsArray });
 };

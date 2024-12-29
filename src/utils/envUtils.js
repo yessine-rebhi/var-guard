@@ -8,10 +8,10 @@ export const handleStaticVariablesViolation = (staticVariables) => {
   console.error(Array.from(staticVariables).map(variable => `   - ${variable}`).join('\n'));
 };
 
-export const handleExistingEnvExample = (envExamplePath, variables) => {
+export const handleExistingEnvExample = async (envExamplePath, variables) => {
   console.log(chalk.blue('📄 Existing .env.example file found.'));
 
-  const { requiredVarsSet: existingVariables } = readEnvExample(envExamplePath);
+  const { requiredVarsSet: existingVariables } = await readEnvExample(envExamplePath);
   const missingVariables = findMissingVariables(variables, existingVariables);
   const extraVariables = findExtraVariables(variables, existingVariables);
 

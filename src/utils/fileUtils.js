@@ -1,36 +1,59 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
+import { parse } from '@typescript-eslint/parser';
+import estraverse from 'estraverse';
 import chalk from 'chalk';
 
 const isTextFile = (fileName) => {
   const textFileExtensions = [
-    '.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.c', '.cpp', '.go', '.rb',
-    '.php', '.html', '.css', '.json', '.yaml', '.yml', '.sh', '.bat', '.env',
+    '.js', '.ts', '.jsx', '.tsx', '.py',
   ];
   return textFileExtensions.some((ext) => fileName.endsWith(ext));
 };
 
-const extractEnvVariables = (filePath, variables, staticVariables) => {
+export const findEnvVariablesInCodebase = async (dir, variables, staticVariables) => {
   try {
-    const content = fs.readFileSync(filePath, 'utf-8');
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
 
-    const dynamicRegex = /\b(?:process\.env\.|ENV\[|getenv\(['"`]|System\.getEnv\(['"`]|os\.getenv\(['"`]|os\.environ\['"`)([\w\d_]+)/g;
-    const excludedVars = ['CI', 'GITHUB_ACTIONS', 'GSL_GITHUB_SECRETS'];
-    let match;
-
-    while ((match = dynamicRegex.exec(content)) !== null) {
-      const varName = match[1];
-      if (!excludedVars.includes(varName)) {
-        variables.add(varName);
+      if (entry.isDirectory()) {
+        if (!['node_modules', '.git', '.github', 'dist', 'build'].includes(entry.name)) {
+          await findEnvVariablesInCodebase(fullPath, variables, staticVariables);
+        }
+      } else if (isTextFile(entry.name)) {
+        await extractEnvVariables(fullPath, variables, staticVariables);
       }
     }
+  } catch (error) {
+    console.error(chalk.red(`❌ Error reading directory: ${dir}`));
+    console.error(chalk.red(`   ${error.message}`));
+  }
+};
 
-    const staticRegex = /\b([A-Z_][A-Z\d_]*)\s*=\s*['"][^'"]+['"]/g;
-    while ((match = staticRegex.exec(content)) !== null) {
-      const varName = match[1];
-      if (!excludedVars.includes(varName)) {
-        staticVariables.add(varName);
+const extractEnvVariables = async (filePath, variables, staticVariables) => {
+  try {
+    const content = await fs.readFile(filePath, 'utf-8');
+
+    if (content.length === 0) {
+      console.warn(chalk.yellow(`Empty file: ${filePath}`));
+      return;
+    }
+
+    if (filePath.endsWith('.py')) {
+      extractPythonEnvVariables(content, variables);
+    } else {
+      let ast;
+      try {
+        ast = parse(content, { filePath, jsx: true, ts: true, sourceType: 'module' });
+      } catch (parseError) {
+        console.error(chalk.red(`❌ Error parsing file: ${filePath}`));
+        console.error(chalk.red(`   ${parseError.message}`));
+        return;
       }
+
+      const envVars = collectEnvVariables(ast);
+      envVars.forEach((varName) => variables.add(varName));
     }
   } catch (error) {
     console.error(chalk.red(`❌ Error reading file: ${filePath}`));
@@ -38,22 +61,93 @@ const extractEnvVariables = (filePath, variables, staticVariables) => {
   }
 };
 
-export const readEnvExample = (filePath) => {
+function collectEnvVariables(ast) {
+  const variables = new Set();
+  const ciCdEnvVars = [
+    'GITHUB_ACTIONS',
+    'GITHUB_ACTION',
+    'GITHUB_ACTOR',
+    'GITHUB_EVENT_NAME',
+    'GITHUB_EVENT_PATH',
+    'GITHUB_REPOSITORY',
+    'GITHUB_RUN_ID',
+    'GITHUB_RUN_NUMBER',
+    'GITHUB_WORKFLOW',
+    'GITHUB_HEAD_REF',
+    'GITHUB_BASE_REF',
+    'GITHUB_SHA',
+    'GITHUB_REF',
+    'GITHUB_ACTOR_ID',
+    'GITHUB_TOKEN',
+    'GITHUB_API_URL',
+    'GITHUB_GRAPHQL_URL',
+  ];
+
+  estraverse.traverse(ast, {
+    enter: function (node) {
+      if (node.type === 'MemberExpression' && isProcessEnv(node.object)) {
+        const property = node.property;
+        if (property.type === 'Literal' && typeof property.value === 'string') {
+          if (!ciCdEnvVars.includes(property.value)) {
+            variables.add(property.value);
+          }
+        } else if (property.type === 'Identifier' && /^[A-Z0-9_]+$/.test(property.name)) {
+          if (!ciCdEnvVars.includes(property.name)) {
+            variables.add(property.name);
+          }
+        }
+      }
+    },
+  });
+
+  return variables;
+}
+
+function isProcessEnv(node) {
+  return node.type === 'MemberExpression' &&
+    node.object.type === 'Identifier' &&
+    node.object.name === 'process' &&
+    node.property.type === 'Identifier' &&
+    node.property.name === 'env';
+}
+
+const extractPythonEnvVariables = (content, variables) => {
+  const getenvPattern = /os\.getenv\(['"]([^'"]*)['"]\)/g;
+  let match;
+  while ((match = getenvPattern.exec(content)) !== null) {
+    variables.add(match[1]);
+  }
+
+  const environPattern = /os\.environ\[['"]([^'"]*)['"]\]/g;
+  while ((match = environPattern.exec(content)) !== null) {
+    variables.add(match[1]);
+  }
+
+  const environGetPattern = /os\.environ\.get\(['"]([^'"]*)['"]\)/g;
+  while ((match = environGetPattern.exec(content)) !== null) {
+    variables.add(match[1]);
+  }
+};
+
+export const readEnvExample = async (filePath) => {
   const requiredVars = new Set();
   const duplicates = new Set();
 
   try {
-    const content = fs.readFileSync(filePath, 'utf-8');
-    content.split('\n').forEach((line) => {
+    const content = await fs.readFile(filePath, { encoding: 'utf-8' });
+    const lines = content.split(/\r?\n/);
+
+    lines.forEach((line) => {
       const trimmedLine = line.trim();
 
       // Ignore comments and blank lines
       if (trimmedLine && !trimmedLine.startsWith('#')) {
-        const [key] = trimmedLine.split('=');
-        if (key && key.trim()) {
-          const varName = key.trim();
+        // Split on the first '=' to handle inline comments
+        const parts = trimmedLine.split(/=(.*)?/);
+        const varName = parts[0].trim();
 
-          // If variable already exists in the Set, it's a duplicate
+        if (varName) {
+          // Check for duplicates
           if (requiredVars.has(varName)) {
             duplicates.add(varName);
           } else {
@@ -72,30 +166,29 @@ export const readEnvExample = (filePath) => {
     }
 
   } catch (error) {
-    console.error(chalk.red(`❌ Error reading .env.example file: ${filePath}`));
-    console.error(chalk.red(`   ${error.message}`));
+    if (error.code === 'ENOENT') {
+      console.warn(chalk.yellow(`🔍 .env.example file not found at: ${filePath}`));
+    } else {
+      console.error(chalk.red(`❌ Error reading .env.example file: ${filePath}`));
+      console.error(chalk.red(`   ${error.message}`));
+    }
   }
 
   return { requiredVarsArray: Array.from(requiredVars), requiredVarsSet: requiredVars };
 };
 
-export const findEnvVariablesInCodebase = (dir, variables, staticVariables) => {
-  try {
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-    for (const entry of entries) {
-      const fullPath = path.join(dir, entry.name);
-
-      if (entry.isDirectory()) {
-        if (!['node_modules', '.git', '.github', 'dist', 'build'].includes(entry.name)) {
-          findEnvVariablesInCodebase(fullPath, variables, staticVariables);
-        }
-      } else if (isTextFile(entry.name)) {
-        extractEnvVariables(fullPath, variables, staticVariables);
+export const findFilesInCodebase = async (dir) => {
+  const files = [];
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (!['node_modules', '.git', '.github', 'dist', 'build'].includes(entry.name)) {
+        files.push(...await findFilesInCodebase(fullPath));
       }
+    } else if (isTextFile(entry.name)) {
+      files.push(fullPath);
     }
-  } catch (error) {
-    console.error(chalk.red(`❌ Error reading directory: ${dir}`));
-    console.error(chalk.red(`   ${error.message}`));
   }
+  return files;
 };
