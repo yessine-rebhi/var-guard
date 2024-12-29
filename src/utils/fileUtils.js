@@ -143,7 +143,7 @@ export const readEnvExample = async (filePath) => {
       // Ignore comments and blank lines
       if (trimmedLine && !trimmedLine.startsWith('#')) {
         // Split on the first '=' to handle inline comments
-        const parts = trimmedLine.split(/=(.*)?/);
+        const parts = trimmedLine.split(/=/, 2);
         const varName = parts[0].trim();
 
         if (varName) {
