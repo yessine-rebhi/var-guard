@@ -24,5 +24,5 @@ export const runValidate = async (options) => {
 
   console.log('🔍 Running "validate" command...');
   const requiredVarsArray = await generateEnvExample();
-  validateEnv({ githubToken, repository, schemaFilePath, envPath, envExamplePath, requiredVarsArray });
+  validateEnv({ githubToken, repository, schemaFilePath, envPath, envExamplePath, requiredVarsArray, isCI });
 };

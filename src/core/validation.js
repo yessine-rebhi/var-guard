@@ -3,7 +3,7 @@ import { validateEnvService } from '../utils/schemaUtils.js';
 import { compareSecrets, fetchGitHubSecrets } from './synchronization.js';
 import { loadEnv } from './envLoading.js';
 
-const validateEnv = async ({ githubToken, repository, schemaFilePath, envPath, envExamplePath, requiredVarsArray }) => {
+const validateEnv = async ({ githubToken, repository, schemaFilePath, envPath, envExamplePath, requiredVarsArray, isCI }) => {
   try {
     console.log(chalk.blue('🔍 Loading environment variables...'));
     const requiredVars = await loadEnv(envPath, requiredVarsArray, schemaFilePath);
@@ -17,7 +17,7 @@ const validateEnv = async ({ githubToken, repository, schemaFilePath, envPath, e
     }
 
     console.log(chalk.blue('🔍 Fetching GitHub secrets...'));
-    const githubSecrets = await fetchGitHubSecrets(githubToken, repository);
+    const githubSecrets = await fetchGitHubSecrets(githubToken, repository, isCI);
     const missingSecrets = compareSecrets(requiredVars, githubSecrets);
 
     if (missingSecrets.length > 0) {
