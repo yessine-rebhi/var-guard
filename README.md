@@ -44,7 +44,7 @@ VarsGuard supports a configuration file `.varsguardrc` in the project root direc
   "envPath": ".env",
   "envExamplePath": ".env.example"
 }
-
+```
 ## Installation
 
 ```bash
