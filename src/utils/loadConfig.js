@@ -4,7 +4,7 @@ import path from 'path';
 const defaultConfig = {
   githubToken: null,
   repo: null,
-  schemaPath: 'schema.json',
+  schemaPath: false,
   envPath: '.env',
   envExamplePath: '.env.example'
 };
@@ -17,7 +17,7 @@ export const loadConfig = () => {
     try {
       userConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
     } catch (error) {
-      console.error('Error parsing .varsguardrc:', error);
+      console.error('Error parsing .varsguardrc: please verify the file is valid JSON.');
     }
   }
 

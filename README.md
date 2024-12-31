@@ -40,7 +40,7 @@ VarsGuard supports a configuration file `.varsguardrc` in the project root direc
 {
   "githubToken": "your_github_token",
   "repo": "your_username/your_repo",
-  "schemaPath": "./custom_schema.json",
+  "schemaPath": false, // or specify the schemaPath (example: schema.json)
   "envPath": ".env",
   "envExamplePath": ".env.example"
 }
@@ -59,11 +59,21 @@ VarsGuard includes a CLI interface for flexible integration into your workflows.
 
 ### Commands
 
-#### 1. `npm run varsguard generate`
+#### 1. `varsguard init`
+
+Generate a default `.varsguardrc` configuration file in the project directory.
+
+**Usage:**
+
+```bash
+npx varsguard init
+```
+
+#### 2. `npm run varsguard generate`
 
 Generates a `.env.example` file by scanning your codebase for references to `process.env.VARIABLE_NAME`.
 
-#### 2. `npm varsguard validate`
+#### 3. `npm varsguard validate`
 
 Validates the `.env` file against a `.env.example` and/or `schema.json` file, and compares local variables with GitHub secrets.
 

@@ -1,7 +1,0 @@
-{
-  "githubToken": "your_github_token",
-  "repo": "your_username/your_repo",
-  "schemaPath": false,
-  "envPath": ".env",
-  "envExamplePath": ".env.example"
-}

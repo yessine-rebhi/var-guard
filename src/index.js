@@ -4,12 +4,20 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { runGenerate } from './commands/generate.js';
 import { runValidate } from './commands/validate.js';
+import { runInit } from './commands/init.js';
 
 const program = new Command();
 
 program
   .version('0.0.12')
   .description('VarsGuard: Secure and streamline environment variable management.');
+  
+program
+  .command('init')
+  .description('Generate a default .varsguardrc configuration file')
+  .action(() => {
+    runInit();
+  });
 
 program
   .command('generate')
