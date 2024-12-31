@@ -40,7 +40,7 @@ VarsGuard supports a configuration file `.varsguardrc` in the project root direc
 {
   "githubToken": "your_github_token",
   "repo": "your_username/your_repo",
-  "schemaPath": false, // or specify the schemaPath (example: schema.json)
+  "schemaPath": false,
   "envPath": ".env",
   "envExamplePath": ".env.example"
 }
