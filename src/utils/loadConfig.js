@@ -1,22 +1,25 @@
 import fs from 'fs';
 import path from 'path';
-import chalk from 'chalk';
 
-const CONFIG_FILE_NAME = '.varsguardrc';
+const defaultConfig = {
+  githubToken: null,
+  repo: null,
+  schemaPath: 'schema.json',
+  envPath: '.env',
+  envExamplePath: '.env.example'
+};
 
 export const loadConfig = () => {
-  const configPath = path.resolve(process.cwd(), CONFIG_FILE_NAME);
+  const configPath = path.join(process.cwd(), '.varsguardrc');
+  let userConfig = {};
 
-  if (!fs.existsSync(configPath)) {
-    console.log(chalk.yellow(`⚠️  No ${CONFIG_FILE_NAME} found. Using defaults.`));
-    return {};
+  if (fs.existsSync(configPath)) {
+    try {
+      userConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    } catch (error) {
+      console.error('Error parsing .varsguardrc:', error);
+    }
   }
 
-  try {
-    const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-    return config;
-  } catch (error) {
-    console.log(chalk.red(`❌ Error reading ${CONFIG_FILE_NAME}: ${error.message}`));
-    process.exit(1);
-  }
+  return { ...defaultConfig, ...userConfig };
 };

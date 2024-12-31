@@ -3,7 +3,7 @@
 **VarsGuard** is a Node.js library designed to streamline and secure the management of environment variables in modern software development. It ensures that all your environment variables are:
 
 - **Validated**: Based on schemas with advanced rules.
-- **Synchronized**: Between local environments and deployment secrets (e.g., GitHub, cloud providers).
+- **Synchronized**: Between local environments and deployment secrets.
 - **Audited**: Tracks changes for traceability and collaboration.
 - **Secure**: Warns against insecure practices and integrates seamlessly with secret managers.
 - **Generated**: Automatically generates the `.env.example` file from your codebase.
@@ -31,6 +31,19 @@
    - Automatically generates a `.env.example` file by scanning your codebase for `process.env` variables.
 
 ---
+
+## Configuration
+
+VarsGuard supports a configuration file `.varsguardrc` in the project root directory. This file allows you to set default values for various options. Here's an example:
+
+```json
+{
+  "githubToken": "your_github_token",
+  "repo": "your_username/your_repo",
+  "schemaPath": "./custom_schema.json",
+  "envPath": ".env",
+  "envExamplePath": ".env.example"
+}
 
 ## Installation
 

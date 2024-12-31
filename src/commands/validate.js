@@ -1,10 +1,19 @@
 import { generateEnvExample } from "../core/generation.js";
 import validateEnv from "../core/validation.js";
+import { loadConfig } from "../utils/loadConfig.js";
 
 export const runValidate = async (options) => {
+  const config = loadConfig();
   const { token, repo, schemaPath } = options;
   const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
-  if ((!token || !repo) && !isCI) {
+
+  const githubToken = token || config.githubToken;
+  const repository = repo || config.repo;
+  const schemaFilePath = schemaPath || config.schemaPath;
+  const envPath = config.envPath;
+  const envExamplePath = config.envExamplePath;
+  
+  if ((!githubToken || !repository) && !isCI) {
     console.error('❌ Missing required arguments for "validate" command.');
     console.error('   Use the following options:');
     console.error('   -t, --token       GitHub token for authentication');
@@ -15,5 +24,5 @@ export const runValidate = async (options) => {
 
   console.log('🔍 Running "validate" command...');
   const requiredVarsArray = await generateEnvExample();
-  validateEnv({ token, repo, schemaPath, requiredVarsArray });
+  validateEnv({ githubToken, repository, schemaFilePath, envPath, envExamplePath, requiredVarsArray });
 };

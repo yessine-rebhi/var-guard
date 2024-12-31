@@ -3,21 +3,21 @@ import { validateEnvService } from '../utils/schemaUtils.js';
 import { compareSecrets, fetchGitHubSecrets } from './synchronization.js';
 import { loadEnv } from './envLoading.js';
 
-const validateEnv = async ({ token, repo, schemaPath, requiredVarsArray }) => {
+const validateEnv = async ({ githubToken, repository, schemaFilePath, envPath, envExamplePath, requiredVarsArray }) => {
   try {
     console.log(chalk.blue('🔍 Loading environment variables...'));
-    const requiredVars = await loadEnv('.env', requiredVarsArray, schemaPath);
+    const requiredVars = await loadEnv(envPath, requiredVarsArray, schemaFilePath);
 
-    if (schemaPath) {
+    if (schemaFilePath) {
       console.log(chalk.green('✔️  Schema validation enabled. Checking against schema.json...'));
-      validateEnvService(requiredVars, schemaPath);
+      validateEnvService(requiredVars, schemaFilePath);
       console.log(chalk.green('✔️  Environment variables are valid according to the schema.'));
     } else {
       console.log(chalk.yellow('⚠️  Schema validation skipped (schemaPath tag not provided).'));
     }
 
     console.log(chalk.blue('🔍 Fetching GitHub secrets...'));
-    const githubSecrets = await fetchGitHubSecrets(token, repo);
+    const githubSecrets = await fetchGitHubSecrets(githubToken, repository);
     const missingSecrets = compareSecrets(requiredVars, githubSecrets);
 
     if (missingSecrets.length > 0) {

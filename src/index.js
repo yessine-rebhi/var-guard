@@ -8,7 +8,7 @@ import { runValidate } from './commands/validate.js';
 const program = new Command();
 
 program
-  .version('0.0.10')
+  .version('0.0.12')
   .description('VarsGuard: Secure and streamline environment variable management.');
 
 program

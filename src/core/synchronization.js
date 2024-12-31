@@ -2,20 +2,6 @@ import axios from 'axios';
 import chalk from 'chalk';
 
 export const fetchGitHubSecrets = async (token, repo) => {
-  if (!token || !repo) {
-    try {
-      const githubSecretsJSON = JSON.parse(process.env.GSL_GITHUB_SECRETS || '{}');
-      if (Object.keys(githubSecretsJSON).length === 0) {
-        console.log(chalk.red('❌ Github Secrets empty.'));
-        return [];
-      }
-      return Object.keys(githubSecretsJSON);
-    } catch (e) {
-      console.error(chalk.red('❌ Error parsing GSL_GITHUB_SECRETS:'), e);
-      return [];
-    }
-  }
-
   const url = `https://api.github.com/repos/${repo}/actions/secrets`;
   try {
     const response = await axios.get(url, {
