@@ -243,6 +243,9 @@ jobs:
         env:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed changes between versions.
 
 ## License
 
