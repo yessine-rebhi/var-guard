@@ -54,6 +54,10 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
 
       const envVars = collectEnvVariables(ast);
       envVars.forEach((varName) => variables.add(varName));
+
+      // Detect static variables
+      const staticVars = detectStaticVariables(ast);
+      staticVars.forEach((varName) => staticVariables.add(varName));
     }
   } catch (error) {
     console.error(chalk.red(`❌ Error reading file: ${filePath}`));
@@ -192,3 +196,18 @@ export const findFilesInCodebase = async (dir) => {
   }
   return files;
 };
+
+function detectStaticVariables(ast) {
+  const staticVars = new Set();
+  
+  estraverse.traverse(ast, {
+    enter: function (node) {
+      if (node.type === 'Literal' && typeof node.value === 'string' && node.value.startsWith('process.env.')) {
+        const varName = node.value.replace('process.env.', '');
+        staticVars.add(varName);
+      }
+    },
+  });
+
+  return staticVars;
+}

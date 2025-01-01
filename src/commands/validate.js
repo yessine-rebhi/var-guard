@@ -11,7 +11,6 @@ export const runValidate = async (options) => {
   const repository = repo || config.repo;
   const schemaFilePath = schemaPath || config.schemaPath;
   const envPath = config.envPath;
-  const envExamplePath = config.envExamplePath;
   
   if ((!githubToken || !repository) && !isCI) {
     console.error('❌ Missing required arguments for "validate" command.');
@@ -24,5 +23,5 @@ export const runValidate = async (options) => {
 
   console.log('🔍 Running "validate" command...');
   const requiredVarsArray = await generateEnvExample();
-  validateEnv({ githubToken, repository, schemaFilePath, envPath, envExamplePath, requiredVarsArray, isCI });
+  validateEnv({ githubToken, repository, schemaFilePath, envPath, requiredVarsArray, isCI });
 };

@@ -12,25 +12,38 @@
 
 ## Features
 
-1. **Validation**
+1. **Generate ****`.env.example`**
+
+   - Automatically generates a `.env.example` file by scanning your codebase for `process.env` variables.
+
+2. **Validation**
 
    - Validate environment variables using a schema (`schema.json`).
    - Support for common formats like `email`, `uri`, and `uuid`.
 
-2. **Synchronization**
+3. **Synchronization**
 
    - Compare local `.env` variables with deployment secrets (e.g., GitHub Secrets).
 
-3. **Security**
+4. **Security**
 
    - Identifies missing or unused variables.
    - Warns against insecure configurations.
 
-4. **Generate ****`.env.example`**
-
-   - Automatically generates a `.env.example` file by scanning your codebase for `process.env` variables.
-
 ---
+
+## Static Variable Policy
+
+VarsGuard enforces a policy against hardcoding environment variables directly in the codebase. If any static environment variables are detected, the tool will output a policy violation message and exit with an error.
+
+Example of a policy violation:
+
+```bash
+❌ Policy Violation: Static environment variables found!
+   These variables should not be hardcoded:
+   - API_KEY
+   - DATABASE_URL
+```
 
 ## Configuration
 
@@ -40,7 +53,7 @@ VarsGuard supports a configuration file `.varsguardrc` in the project root direc
 {
   "githubToken": "your_github_token",
   "repo": "your_username/your_repo",
-  "schemaPath": false, // or specify the schemaPath (example: schema.json)
+  "schemaPath": false,
   "envPath": ".env",
   "envExamplePath": ".env.example"
 }

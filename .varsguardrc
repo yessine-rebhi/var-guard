@@ -1,0 +1,9 @@
+{
+  "githubToken": null,
+  "repo": null,
+  "schemaPath": "schema.json",
+  "envPath": ".env",
+  "envExamplePath": ".env.example",
+  "checkVariables": ["API_KEY", "DATABASE_URL"],
+  "ignorePatterns": ["^TEST_.*"]
+} 
