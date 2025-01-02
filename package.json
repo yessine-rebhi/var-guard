@@ -14,7 +14,10 @@
     "varsguard": "src/index.js"
   },
   "scripts": {
-    "varsguard": "node src/index.js"
+    "varsguard": "node src/index.js",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^8.18.2",
@@ -25,7 +28,8 @@
     "chokidar": "^4.0.3",
     "commander": "^12.1.0",
     "dotenv": "^16.4.7",
-    "estraverse": "^5.3.0"
+    "estraverse": "^5.3.0",
+    "typescript": "^5.7.2"
   },
   "keywords": [
     "env",
@@ -38,6 +42,7 @@
     "github"
   ],
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "@vitest/coverage-v8": "^2.1.8",
+    "vitest": "^2.1.8"
   }
 }
