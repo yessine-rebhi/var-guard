@@ -25,8 +25,9 @@
 
    - Identifies missing or unused variables.
    - Warns against insecure configurations.
+   - **Detects static environment variables in the codebase and raises a policy violation.**
 
-4. **Generate ****`.env.example`**
+4. **Generate `.env.example`**
 
    - Automatically generates a `.env.example` file by scanning your codebase for `process.env` variables.
 
@@ -45,6 +46,7 @@ VarsGuard supports a configuration file `.varsguardrc` in the project root direc
   "envExamplePath": ".env.example"
 }
 ```
+
 ## Installation
 
 ```bash
@@ -71,7 +73,7 @@ npx varsguard init
 
 #### 2. `npm run varsguard generate`
 
-Generates a `.env.example` file by scanning your codebase for references to `process.env.VARIABLE_NAME`.
+Generates a `.env.example` file by scanning your codebase for references to `process.env.VARIABLE_NAME` and checks for static environment variables, raising warnings or errors if found.
 
 #### 3. `npm varsguard validate`
 
@@ -145,7 +147,7 @@ import { generateEnvExample } from 'varsguard';
 generateEnvExample();
 ```
 
-This command will scan your codebase for any references to `process.env.VARIABLE_NAME`, then generate a `.env.example` file in the root of your project. This file will include all the required environment variables, allowing you to easily share it with your team or for use in CI/CD pipelines.
+This command will scan your codebase for any references to `process.env.VARIABLE_NAME`, then generate a `.env.example` file in the root of your project. This file will include all the required environment variables, allowing you to easily share it with your team or for use in CI/CD pipelines. It also checks for static environment variables and raises a policy violation if any are found.
 
 ---
 
@@ -243,6 +245,7 @@ jobs:
         env:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed changes between versions.
@@ -250,3 +253,4 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed changes between versions.
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+```

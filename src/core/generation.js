@@ -11,7 +11,6 @@ export const generateEnvExample = async () => {
   const variables = new Set();
   const staticVariables = new Set();
 
-  console.log('test', config.envExamplePath);
   const envExamplePath = path.join(projectRootDir, config.envExamplePath);
 
   console.log(chalk.blue('🔍 Scanning codebase for environment variables...'));

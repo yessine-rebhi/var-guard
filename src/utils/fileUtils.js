@@ -18,7 +18,7 @@ export const findEnvVariablesInCodebase = async (dir, variables, staticVariables
       const fullPath = path.join(dir, entry.name);
 
       if (entry.isDirectory()) {
-        if (!['node_modules', '.git', '.github', 'dist', 'build'].includes(entry.name)) {
+        if (!['node_modules', '.git', '.github', 'dist', 'build', 'coverage'].includes(entry.name)) {
           await findEnvVariablesInCodebase(fullPath, variables, staticVariables);
         }
       } else if (isTextFile(entry.name)) {
@@ -54,6 +54,18 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
 
       const envVars = collectEnvVariables(ast);
       envVars.forEach((varName) => variables.add(varName));
+      const API_KEY ="aa"
+      // Check for static variable assignments
+      estraverse.traverse(ast, {
+        enter: function (node) {
+          if (node.type === 'VariableDeclarator' && node.init) {
+            if (node.init.type === 'Literal' && typeof node.init.value === 'string') {
+              const varName = node.id.name;
+              staticVariables.add(varName);
+            }
+          }
+        },
+      });
     }
   } catch (error) {
     console.error(chalk.red(`❌ Error reading file: ${filePath}`));
