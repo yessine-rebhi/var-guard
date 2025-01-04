@@ -9,7 +9,7 @@ import { runInit } from './commands/init.js';
 const program = new Command();
 
 program
-  .version('0.0.12')
+  .version('0.1.0')
   .description('VarsGuard: Secure and streamline environment variable management.');
   
 program

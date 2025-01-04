@@ -17,8 +17,12 @@ export const generateEnvExample = async () => {
 
   await findEnvVariablesInCodebase(projectRootDir, variables, staticVariables);
 
-  if (staticVariables.size > 0) {
-    handleStaticVariablesViolation(staticVariables);
+  const envStaticVariables = Array.from(staticVariables).filter(varName =>
+    variables.has(varName)
+  );
+
+  if (envStaticVariables.size > 0) {
+    handleStaticVariablesViolation(envStaticVariables);
     process.exit(1);
   }
 
