@@ -1,4 +1,4 @@
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, res) => {
   console.error(`[${new Date().toISOString()}] Error:`, err.message);
   console.error('Stack:', err.stack);
 

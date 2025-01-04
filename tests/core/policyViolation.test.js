@@ -1,9 +1,8 @@
 import { generateEnvExample } from '../../src/core/generation.js';
 import { vi, expect, describe, it } from 'vitest';
-import chalk from 'chalk';
 import process from 'process';
 
-describe.only('Policy Violation: Static Environment Variables', () => {
+describe('Policy Violation: Static Environment Variables', () => {
   let consoleErrorSpy;
   let exitSpy;
 

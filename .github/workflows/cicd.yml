@@ -24,10 +24,12 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          
+
+      - name: Run tests
+        run: |
+          npm test
+
       - name: Validate Environment Variables
         run: npm run varsguard validate
         env:
           GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
-          
-
