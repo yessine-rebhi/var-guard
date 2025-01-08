@@ -1,9 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { parse } from '@typescript-eslint/parser';
-import estraverse from 'estraverse';
+import { parse } from '@babel/parser';
+import _traverse from "@babel/traverse";
 import chalk from 'chalk';
 
+const traverse = _traverse.default;
 const isTextFile = (fileName) => {
   const textFileExtensions = [
     '.js', '.ts', '.jsx', '.tsx', '.py',
@@ -45,7 +46,10 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
     } else {
       let ast;
       try {
-        ast = parse(content, { filePath, jsx: true, ts: true, sourceType: 'module' });
+        ast = parse(content, {
+          sourceType: 'module',
+          plugins: ['jsx', 'typescript'],
+        });
       } catch (parseError) {
         console.error(chalk.red(`❌ Error parsing file: ${filePath}`));
         console.error(chalk.red(`   ${parseError.message}`));
@@ -55,8 +59,9 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
       const envVars = collectEnvVariables(ast);
       envVars.forEach((varName) => variables.add(varName));
       // Check for static variable assignments
-      estraverse.traverse(ast, {
-        enter: function (node) {
+      traverse(ast, {
+        enter: function (path) {
+          const node = path.node;
           if (node.type === 'VariableDeclarator' && node.init) {
             if (node.init.type === 'Literal' && typeof node.init.value === 'string') {
               const varName = node.id.name;
@@ -74,42 +79,22 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
 
 function collectEnvVariables(ast) {
   const variables = new Set();
-  const ciCdEnvVars = [
-    'GITHUB_ACTIONS',
-    'GITHUB_ACTION',
-    'GITHUB_ACTOR',
-    'GITHUB_EVENT_NAME',
-    'GITHUB_EVENT_PATH',
-    'GITHUB_REPOSITORY',
-    'GITHUB_RUN_ID',
-    'GITHUB_RUN_NUMBER',
-    'GITHUB_WORKFLOW',
-    'GITHUB_HEAD_REF',
-    'GITHUB_BASE_REF',
-    'GITHUB_SHA',
-    'GITHUB_REF',
-    'GITHUB_ACTOR_ID',
-    'GITHUB_TOKEN',
-    'GITHUB_API_URL',
-    'GITHUB_GRAPHQL_URL',
-  ];
 
-  estraverse.traverse(ast, {
-    enter: function (node) {
+  traverse(ast, {
+    enter: function (path) {
+      const node = path.node;
       if (node.type === 'MemberExpression' && isProcessEnv(node.object)) {
-        const property = node.property;
-        if (property.type === 'Literal' && typeof property.value === 'string') {
-          if (!ciCdEnvVars.includes(property.value)) {
-            variables.add(property.value);
-          }
-        } else if (property.type === 'Identifier' && /^[A-Z0-9_]+$/.test(property.name)) {
-          if (!ciCdEnvVars.includes(property.name)) {
-            variables.add(property.name);
-          }
+        if (node.property.type === 'Identifier') {
+          variables.add(node.property.name);
+        } else if (node.property.type === 'Literal') {
+          variables.add(node.property.value);
+        } else if (node.computed) {
+          variables.add(`computed_${node.property.type}`);
         }
       }
     },
   });
+
 
   return variables;
 }

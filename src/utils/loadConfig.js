@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 
 const defaultConfig = {
-  githubToken: null,
-  repo: null,
+  githubToken: "your_github_token",
+  repo: "your_github_repo",
   schemaPath: false,
   envPath: '.env',
   envExamplePath: '.env.example'

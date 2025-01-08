@@ -4,9 +4,9 @@ import path from 'path';
 export const runInit = () => {
   const configPath = path.join(process.cwd(), '.varsguardrc');
   const defaultConfig = {
-    githubToken: null,
-    repo: null,
-    schemaPath: 'schema.json',
+    githubToken: "your_github_token",
+    repo: "your_github_token",
+    schemaPath: false,
     envPath: '.env',
     envExamplePath: '.env.example'
   };
