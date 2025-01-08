@@ -14,14 +14,13 @@ export const generateEnvExample = async () => {
   const envExamplePath = path.join(projectRootDir, config.envExamplePath);
 
   console.log(chalk.blue('🔍 Scanning codebase for environment variables...'));
-
   await findEnvVariablesInCodebase(projectRootDir, variables, staticVariables);
 
   const envStaticVariables = Array.from(staticVariables).filter(varName =>
     variables.has(varName)
   );
-
-  if (envStaticVariables.size > 0) {
+  
+  if (envStaticVariables.length > 0) {
     handleStaticVariablesViolation(envStaticVariables);
     process.exit(1);
   }

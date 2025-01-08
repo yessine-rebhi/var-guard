@@ -63,7 +63,7 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
         enter: function (path) {
           const node = path.node;
           if (node.type === 'VariableDeclarator' && node.init) {
-            if (node.init.type === 'Literal' && typeof node.init.value === 'string') {
+            if (node.init.type === 'StringLiteral' && typeof node.init.value === 'string') {
               const varName = node.id.name;
               staticVariables.add(varName);
             }
