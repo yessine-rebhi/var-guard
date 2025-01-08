@@ -1,6 +1,6 @@
 {
   "name": "varsguard",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "Ensures environment variables are validated, synchronized, audited, and secure.",
   "type": "module",
   "main": "src/index.js",

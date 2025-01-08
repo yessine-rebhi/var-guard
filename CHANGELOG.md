@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added detection for environment variables in jsx, tsx codebase files.
+
+## [0.1.1] - 2025-01-08
+
+### Added
+
 - Added detection for static environment variables in the codebase.
 - Updated `generate` command to include static variable checks.
 
