@@ -9,7 +9,6 @@ export const runInit = () => {
     schemaPath: false,
     envPath: '.env',
     envExamplePath: '.env.example',
-    viteMode: false,
     vitePrefix: "VITE_"
   };
 

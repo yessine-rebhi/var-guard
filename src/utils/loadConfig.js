@@ -6,7 +6,8 @@ const defaultConfig = {
   repo: "your_github_repo",
   schemaPath: false,
   envPath: '.env',
-  envExamplePath: '.env.example'
+  envExamplePath: '.env.example',
+  vitePrefix: "VITE_"
 };
 
 export const loadConfig = () => {

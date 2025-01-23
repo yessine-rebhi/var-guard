@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import { findEnvVariablesInCodebase } from "../utils/fileUtils.js";
-import { handleExistingEnvExample, handleNewEnvExample, handleStaticVariablesViolation } from '../utils/envUtils.js';
+import { detectViteProject, handleExistingEnvExample, handleNewEnvExample, handleStaticVariablesViolation } from '../utils/envUtils.js';
 import { loadConfig } from '../utils/loadConfig.js';
 
 export const generateEnvExample = async () => {
@@ -27,7 +27,9 @@ export const generateEnvExample = async () => {
 
   // Vite-specific filtering
   let filteredVariables = new Set(variables);
-  if (config.viteMode) {
+  const isViteProject = await detectViteProject(projectRootDir);
+
+  if (isViteProject) {
     const VITE_IGNORED = ['MODE', 'DEV', 'PROD', 'SSR']; // Vite's built-in vars
     const prefix = config.vitePrefix || 'VITE_';
 

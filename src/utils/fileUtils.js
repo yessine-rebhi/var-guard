@@ -3,12 +3,11 @@ import path from 'path';
 import { parse } from '@babel/parser';
 import _traverse from "@babel/traverse";
 import chalk from 'chalk';
+
 const traverse = _traverse.default;
 
 const isTextFile = (fileName) => {
-  const textFileExtensions = [
-    '.js', '.ts', '.jsx', '.tsx', '.py',
-  ];
+  const textFileExtensions = ['.js', '.ts', '.jsx', '.tsx', '.py'];
   return textFileExtensions.some((ext) => fileName.endsWith(ext));
 };
 
@@ -58,14 +57,13 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
 
       const envVars = collectEnvVariables(ast);
       envVars.forEach((varName) => variables.add(varName));
-      // Check for static variable assignments
+
       traverse(ast, {
         enter: function (path) {
           const node = path.node;
           if (node.type === 'VariableDeclarator' && node.init) {
             if (node.init.type === 'StringLiteral' && typeof node.init.value === 'string') {
-              const varName = node.id.name;
-              staticVariables.add(varName);
+              staticVariables.add(node.id.name);
             }
           }
         },
@@ -77,48 +75,23 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
   }
 };
 
-function isViteEnv(node) {
-  return (
-    node.type === 'MemberExpression' &&
-    node.object.type === 'MetaProperty' &&
-    node.object.meta.name === 'import' &&
-    node.object.property.name === 'meta' &&
-    node.property.type === 'Identifier' &&
-    node.property.name === 'env'
-  );
-}
-
 function collectEnvVariables(ast) {
   const variables = new Set();
 
   traverse(ast, {
-    enter: function (path) {
-      const node = path.node;
-      if (node.type === 'MemberExpression') {
-        let varName;
+    MemberExpression(path) {
+      const { node } = path;
 
-        // Check for process.env.VAR
-        if (isProcessEnv(node.object)) {
-          if (node.property.type === 'Identifier') {
-            varName = node.property.name;
-          } else if (node.property.type === 'Literal') {
-            varName = node.property.value;
-          }
-        }
-        // Check for import.meta.env.VAR
-        else if (isViteEnv(node.object)) {
-          if (node.property.type === 'Identifier') {
-            varName = node.property.name;
-          } else if (node.property.type === 'Literal') {
-            varName = node.property.value;
-          }
-        }
-
-        if (varName) {
-          variables.add(varName);
-        }
+      // Detect process.env.VAR_NAME
+      if (isProcessEnv(node.object)) {
+        addVariable(node.property, variables);
       }
-    },
+
+      // Detect import.meta.env.VAR_NAME (Vite)
+      if (isImportMetaEnvParent(node.object)) {
+        addVariable(node.property, variables);
+      }
+    }
   });
 
   return variables;
@@ -132,22 +105,35 @@ function isProcessEnv(node) {
     node.property.name === 'env';
 }
 
+function isImportMetaEnvParent(node) {
+  return node.type === 'MemberExpression' &&
+    node.object?.type === 'MetaProperty' &&
+    node.object.meta.name === 'import' &&
+    node.object.property.name === 'meta' &&
+    node.property.name === 'env';
+}
+
+function addVariable(node, variables) {
+  if (node.type === 'Identifier') {
+    variables.add(node.name);
+  } else if (node.type === 'Literal') {
+    variables.add(node.value);
+  }
+}
+
 const extractPythonEnvVariables = (content, variables) => {
-  const getenvPattern = /os\.getenv\(['"]([^'"]*)['"]\)/g;
-  let match;
-  while ((match = getenvPattern.exec(content)) !== null) {
-    variables.add(match[1]);
-  }
+  const patterns = [
+    /os\.getenv\(['"]([^'"]*)['"]\)/g,
+    /os\.environ\[['"]([^'"]*)['"]\]/g,
+    /os\.environ\.get\(['"]([^'"]*)['"]\)/g
+  ];
 
-  const environPattern = /os\.environ\[['"]([^'"]*)['"]\]/g;
-  while ((match = environPattern.exec(content)) !== null) {
-    variables.add(match[1]);
-  }
-
-  const environGetPattern = /os\.environ\.get\(['"]([^'"]*)['"]\)/g;
-  while ((match = environGetPattern.exec(content)) !== null) {
-    variables.add(match[1]);
-  }
+  patterns.forEach(pattern => {
+    let match;
+    while ((match = pattern.exec(content)) !== null) {
+      variables.add(match[1]);
+    }
+  });
 };
 
 export const readEnvExample = async (filePath) => {
@@ -160,15 +146,9 @@ export const readEnvExample = async (filePath) => {
 
     lines.forEach((line) => {
       const trimmedLine = line.trim();
-
-      // Ignore comments and blank lines
       if (trimmedLine && !trimmedLine.startsWith('#')) {
-        // Split on the first '=' to handle inline comments
-        const parts = trimmedLine.split(/=/, 2);
-        const varName = parts[0].trim();
-
+        const varName = trimmedLine.split(/=/)[0].trim();
         if (varName) {
-          // Check for duplicates
           if (requiredVars.has(varName)) {
             duplicates.add(varName);
           } else {
@@ -178,7 +158,6 @@ export const readEnvExample = async (filePath) => {
       }
     });
 
-    // Inform about duplicates
     if (duplicates.size > 0) {
       console.warn(chalk.yellow('⚠️  Duplicated variables found in .env.example:'));
       duplicates.forEach((varName) => {

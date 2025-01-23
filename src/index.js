@@ -9,9 +9,9 @@ import { runInit } from './commands/init.js';
 const program = new Command();
 
 program
-  .version('0.1.0')
+  .version('0.3.0')
   .description('VarsGuard: Secure and streamline environment variable management.');
-  
+
 program
   .command('init')
   .description('Generate a default .varsguardrc configuration file')
