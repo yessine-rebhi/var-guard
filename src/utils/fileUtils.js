@@ -3,8 +3,8 @@ import path from 'path';
 import { parse } from '@babel/parser';
 import _traverse from "@babel/traverse";
 import chalk from 'chalk';
-
 const traverse = _traverse.default;
+
 const isTextFile = (fileName) => {
   const textFileExtensions = [
     '.js', '.ts', '.jsx', '.tsx', '.py',
@@ -77,24 +77,49 @@ const extractEnvVariables = async (filePath, variables, staticVariables) => {
   }
 };
 
+function isViteEnv(node) {
+  return (
+    node.type === 'MemberExpression' &&
+    node.object.type === 'MetaProperty' &&
+    node.object.meta.name === 'import' &&
+    node.object.property.name === 'meta' &&
+    node.property.type === 'Identifier' &&
+    node.property.name === 'env'
+  );
+}
+
 function collectEnvVariables(ast) {
   const variables = new Set();
 
   traverse(ast, {
     enter: function (path) {
       const node = path.node;
-      if (node.type === 'MemberExpression' && isProcessEnv(node.object)) {
-        if (node.property.type === 'Identifier') {
-          variables.add(node.property.name);
-        } else if (node.property.type === 'Literal') {
-          variables.add(node.property.value);
-        } else if (node.computed) {
-          variables.add(`computed_${node.property.type}`);
+      if (node.type === 'MemberExpression') {
+        let varName;
+
+        // Check for process.env.VAR
+        if (isProcessEnv(node.object)) {
+          if (node.property.type === 'Identifier') {
+            varName = node.property.name;
+          } else if (node.property.type === 'Literal') {
+            varName = node.property.value;
+          }
+        }
+        // Check for import.meta.env.VAR
+        else if (isViteEnv(node.object)) {
+          if (node.property.type === 'Identifier') {
+            varName = node.property.name;
+          } else if (node.property.type === 'Literal') {
+            varName = node.property.value;
+          }
+        }
+
+        if (varName) {
+          variables.add(varName);
         }
       }
     },
   });
-
 
   return variables;
 }

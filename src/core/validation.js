@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { validateEnvService } from '../utils/schemaUtils.js';
+import {  } from '../utils/schemaUtils.js';
 import { compareSecrets, fetchGitHubSecrets } from './synchronization.js';
 import { loadEnv } from './envLoading.js';
 

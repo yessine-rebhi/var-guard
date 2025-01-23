@@ -19,21 +19,43 @@ export const generateEnvExample = async () => {
   const envStaticVariables = Array.from(staticVariables).filter(varName =>
     variables.has(varName)
   );
-  
+
   if (envStaticVariables.length > 0) {
     handleStaticVariablesViolation(envStaticVariables);
     process.exit(1);
   }
 
-  if (variables.size === 0) {
+  // Vite-specific filtering
+  let filteredVariables = new Set(variables);
+  if (config.viteMode) {
+    const VITE_IGNORED = ['MODE', 'DEV', 'PROD', 'SSR']; // Vite's built-in vars
+    const prefix = config.vitePrefix || 'VITE_';
+
+    filteredVariables = new Set(
+      Array.from(filteredVariables).filter(varName =>
+        !VITE_IGNORED.includes(varName) &&
+        (prefix === '' || varName.startsWith(prefix))
+      )
+    );
+
+    if (filteredVariables.size === 0 && variables.size > 0) {
+      console.log(chalk.yellow(`⚠️  No variables found with Vite prefix '${prefix}'`));
+      console.log(chalk.yellow('   Detected variables:'), Array.from(variables).join(', '));
+      process.exit(0);
+    }
+  }
+
+  if (filteredVariables.size === 0) {
     console.error(chalk.yellow('⚠️  No environment variables detected in the codebase!'));
     process.exit(0);
   }
 
+  // Use filtered variables for example generation
   if (fs.existsSync(envExamplePath)) {
-    await handleExistingEnvExample(envExamplePath, variables);
+    await handleExistingEnvExample(envExamplePath, filteredVariables);
   } else {
-    handleNewEnvExample(envExamplePath, variables);
+    handleNewEnvExample(envExamplePath, filteredVariables);
   }
-  return Array.from(variables);
+
+  return Array.from(filteredVariables);
 };

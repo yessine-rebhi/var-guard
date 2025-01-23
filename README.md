@@ -4,7 +4,6 @@
 
 - **Validated**: Based on schemas with advanced rules.
 - **Synchronized**: Between local environments and deployment secrets.
-- **Audited**: Tracks changes for traceability and collaboration.
 - **Secure**: Warns against insecure practices and integrates seamlessly with secret managers.
 - **Generated**: Automatically generates the `.env.example` file from your codebase.
 
@@ -29,7 +28,7 @@
 
 4. **Generate `.env.example`**
 
-   - Automatically generates a `.env.example` file by scanning your codebase for `process.env` variables.
+   - Automatically generates a `.env.example` file by scanning your codebase for `process.env` / `import.meta.env` variables.
 
 ---
 

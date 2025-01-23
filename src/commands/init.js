@@ -8,7 +8,9 @@ export const runInit = () => {
     repo: "your_github_token",
     schemaPath: false,
     envPath: '.env',
-    envExamplePath: '.env.example'
+    envExamplePath: '.env.example',
+    viteMode: false,
+    vitePrefix: "VITE_"
   };
 
   if (fs.existsSync(configPath)) {
