@@ -90,23 +90,37 @@ npx varsguard validate [--token GH_TOKEN] [--repo owner/repo]
 
 `.github/workflows/varsguard.yml`:
 ```yaml
-name: VarsGuard Security Check
+name: EnvGuard CI/CD Pipeline
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
 
 jobs:
-  validate:
+  validate-env:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: 20
-      - run: npm install varsguard
-      - name: Validate Environment
-        run: npx varsguard validate
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Validate Environment Variables
+        run: npm run varsguard validate
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GSL_GITHUB_SECRETS: ${{ toJson(secrets) }}
 ```
 
 ---
