@@ -90,7 +90,7 @@ npx varsguard validate [--token GH_TOKEN] [--repo owner/repo]
 
 `.github/workflows/varsguard.yml`:
 ```yaml
-name: EnvGuard CI/CD Pipeline
+name: Varsguard security check
 
 on:
   push:
@@ -106,16 +106,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: |
-          npm install
+          npm ci
 
       - name: Validate Environment Variables
         run: npm run varsguard validate
